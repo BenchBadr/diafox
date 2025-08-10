@@ -6,7 +6,8 @@
   "description": "Porting Dia Browser experience to Firefox",
 
   "icons": {
-    "48": "icons/border-48.png"
+    "48": "icons/icon_48x48.png",
+    "96": "icons/icon_big.png"
   },
 
   "content_scripts": [

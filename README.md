@@ -1,28 +1,9 @@
 
 
-<style>
-img {
-    max-width:100%;
-    width:300px;
-}
-
-div.center{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-
-    h1 {
-        border:none;
-        text-decoration:none;
-    }
-}
-</style>
-
-<div class="center">
+<center>
 <img src="icons/icon_big.png">
-<h1>DiaFox</h1>
-</div>
+<h1 style="border:none;text-decoration:none;">DiaFox</h1>
+</center>
 
 # Introduction
 
