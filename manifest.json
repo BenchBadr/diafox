@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "Diafox",
+  "version": "1.0",
+
+  "description": "Porting Dia Browser experience to Firefox",
+
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.mozilla.org/*"],
+      "js": ["diafox.js"]
+    }
+  ]
+}
