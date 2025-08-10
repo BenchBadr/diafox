@@ -1,9 +1,8 @@
+<p align="center">
+<img src="icons/icon_big.png" width="100px" max-width='100%'>
+<h1 align="center" style="border:none">DiaFox</h1>
+</p>
 
-
-<center>
-<img src="icons/icon_big.png">
-<h1 style="border:none;text-decoration:none;">DiaFox</h1>
-</center>
 
 # Introduction
 
