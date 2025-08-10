@@ -24,6 +24,7 @@ Below a check-list of the development progress.
 - [ ] Chat with Youtube
 - [ ] Chat with PDFs
 - [ ] Model switcher
+- [ ] Create and save skills
 
 # Status
 

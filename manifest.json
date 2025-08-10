@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Diafox",
   "version": "1.0",
 
@@ -10,10 +10,20 @@
     "96": "icons/icon_big.png"
   },
 
-  "content_scripts": [
-    {
-      "matches": ["*://*.mozilla.org/*"],
-      "js": ["diafox.js"]
+  "sidebar_action": {   
+        "default_icon": "icons/icon_48x48.png",
+        "default_title": "DiaFox",
+        "default_panel": "sidebar/panel.html"
+    },
+
+    "permissions": ["storage", "tabs"],
+
+    "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      }
     }
-  ]
+  }
 }
