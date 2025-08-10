@@ -15,8 +15,6 @@ const accentColors = [
 async function makeAccents() {
     const accent = await getCookie('accent');
 
-    console.log('ACCENT',accent)
-
     accentColors.forEach(color => {
         const span = document.createElement('span');
 
@@ -47,3 +45,19 @@ async function makeAccents() {
 makeAccents();
 
 
+const handleChange = (event) => {
+    console.log('blblbl', event.target.value)
+    setCookie('instructions', event.target.value);
+}
+
+
+async function initInstructions()  {
+    const instructions = await getCookie('instructions');
+    if (instructions) {
+        document.querySelector("#instructions").value = instructions;
+    }
+}
+
+initInstructions();
+
+document.querySelector("#instructions").addEventListener('input', handleChange);
