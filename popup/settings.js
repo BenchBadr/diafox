@@ -74,20 +74,57 @@ SKILL HANDLING
 */
 
 
-const createSkill = (title, instructions) => (
-    `
-    <div class="skills">
-        <label>
-            ${title ? title : 'New skill'}
-            <input type="checkbox"/>
-        </label>
-        <div class="skill-content">
-            <a>Name</a>
-            <input type="text" placeholder="/my-skill" value="${title}">
-            <a>Instructions</a>
-            <textarea placeholder="No more than three paragraphs and more narrative than informational."
-            value="${instructions ? instructions : ''}"></textarea>
-        </div>
-    </div>
-    `
-)
+const createSkill = (title, instructions) => {
+    const skillDiv = document.createElement('div');
+    skillDiv.className = 'skills';
+
+    // Label with checkbox
+    const label = document.createElement('label');
+    label.textContent = title ? title : 'New skill';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    label.appendChild(checkbox);
+
+    // Skill content
+    const skillContent = document.createElement('div');
+    skillContent.className = 'skill-content';
+
+    // Name
+    const nameA = document.createElement('a');
+    nameA.textContent = 'Name';
+    skillContent.appendChild(nameA);
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = '/my-skill';
+    nameInput.value = title || '';
+    skillContent.appendChild(nameInput);
+
+    // Instructions
+    const instrA = document.createElement('a');
+    instrA.textContent = 'Instructions';
+    skillContent.appendChild(instrA);
+
+    const textarea = document.createElement('textarea');
+    textarea.placeholder = 'No more than three paragraphs and more narrative than informational.';
+    textarea.value = instructions ? instructions : '';
+    skillContent.appendChild(textarea);
+
+    // Assemble
+    skillDiv.appendChild(label);
+    skillDiv.appendChild(skillContent);
+
+    return skillDiv;
+}
+
+
+const loadSkills = async () => {
+
+
+    const container = document.querySelector('#skill-container');
+
+    container.appendChild(createSkill('test', 'hello'));
+}
+
+loadSkills();

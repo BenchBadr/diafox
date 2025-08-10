@@ -10,6 +10,7 @@
   --high-bg:var(--high-light);
 
   --text-op: color-mix(in srgb, transparent 80%, var(--text));
+  --text-op-high: color-mix(in srgb, transparent 20%, var(--text));
 
   --bg-prompt: color-mix(in srgb, transparent 50%, var(--high-bg));
 
@@ -294,4 +295,32 @@ textarea {
 
 .skills label:has(input[type="checkbox"]:checked)::after{
   transform:rotate(90deg);
+}
+
+.create-skill{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:5px;
+  border-radius: 5px;
+
+  font-weight: bold;
+  cursor:pointer;
+
+  background:var(--text-op);
+  color:var(--text-op-high);
+
+  margin-bottom:2em;
+  transition-duration: .2s;
+
+  &:hover{
+    background:var(--accent-op-20);
+  }
+
+  &::before{
+    content:'add';
+    font-family: Material Icons;
+    margin-right:5px;
+    font-size:150%;
+  }
 }
