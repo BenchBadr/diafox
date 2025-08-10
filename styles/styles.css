@@ -24,7 +24,16 @@
   --accent-orange:#c95125;
 
   --accent:var(--accent-white);
+
+  --accent-op-10: color-mix(in srgb, var(--accent) 10%, transparent 90%);
+  --accent-op-20: color-mix(in srgb, var(--accent) 20%, transparent 80%);
+  --accent-op-30: color-mix(in srgb, var(--accent) 30%, transparent 70%);
+  --accent-op-40: color-mix(in srgb, var(--accent) 40%, transparent 60%);
+  --accent-op-50: color-mix(in srgb, var(--accent) 50%, transparent 50%);
 }
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 
 body {
     background:var(--bg);
@@ -95,7 +104,6 @@ textarea {
   &::-webkit-scrollbar {
     display: none !important;
   }
-
     
 }
 
@@ -177,7 +185,7 @@ textarea {
     line-height: 1.4;
   }
 
-  textarea {
+  textarea, input[type="text"] {
     background:var(--high-bg);
     outline:none;
     resize:vertical;
@@ -186,6 +194,104 @@ textarea {
     border-radius: 10px;
     padding:.5rem;
     width:calc(100% - 1rem);
-    min-height:150px;
+    min-height:100px;
   }
+
+  input[type="text"]{
+    color:var(--text);
+    outline:none;
+    border:none;
+    min-height:unset;
+  }
+}
+
+.skills label {
+  user-select: none;
+  display: block;
+  padding:5px;
+  cursor:pointer;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.08);
+  border-radius: 5px;
+
+  display: flex;
+  align-items: center;
+
+  background:var(--accent-op-50);
+  border:1px solid var(--bg);
+}
+
+.skills input[type="checkbox"]{
+  display: none;
+}
+
+.skills .skill-content{
+  max-height: 0;
+  background:var(--accent-op-10);
+  transition: max-height 0.2s ease;
+  overflow:scroll;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  a {
+    padding:5px 0;
+    font-weight: bold;
+  }
+
+
+  input[type="text"], textarea {
+    background:var(--bg-prompt);
+    border:1px var(--text-op) solid;
+    display: block;
+    resize:none;
+    width:auto;
+  }
+
+}
+
+.skills label:has(input[type=checkbox]:checked) + .skill-content{
+  max-height: 500px;
+  padding:5px;
+}
+
+.skills label::before{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border:1px solid;
+  border-radius:3px;
+
+  font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+
+  height:1em;
+  width:1em;
+  content:'/';
+
+  color:var(--text-op);
+  margin-right:1em;
+
+  padding:3px;
+
+}
+
+.skills label::after{
+  font-family: 'Material Icons';
+  content: 'chevron_right';
+
+  font-size:150%;
+
+  margin-left: auto;
+
+  transition-duration:.2s;
+
+  color:var(--text-op);
+}
+
+.skills label:has(input[type="checkbox"]:checked)::after{
+  transform:rotate(90deg);
 }

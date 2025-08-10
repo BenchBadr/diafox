@@ -19,12 +19,25 @@ Below a check-list of the development progress.
 
 # Check-list
 
+
+
+## 1. Appearance
+
 - [ ] Toggle sidebar with `Cmd/Ctrl`+`E`
+- [ ] Skill auto-suggest
+
+## 2. Customization
+
+- [x] Custom instructions
+- [ ] Create and save skills
+
+## 3. Functionnalities
+
 - [ ] @mention tabs to add context
 - [ ] Chat with Youtube
 - [ ] Chat with PDFs
 - [ ] Model switcher
-- [ ] Create and save skills
+- [ ] Agentic capabilities (Tool-calling)
 
 # Status
 

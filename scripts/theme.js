@@ -30,7 +30,8 @@ async function applyFirefoxTheme(theme) {
   const accent = await getCookie('accent');
 
   if (accent) {
-    root.setProperty('--accent', `--accent-${accent}`);
+
+    root.setProperty('--accent', `var(--accent-${accent})`);
   }
   
 }

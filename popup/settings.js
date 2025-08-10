@@ -33,6 +33,8 @@ async function makeAccents() {
             document.querySelectorAll('.accent').forEach(el => {
                 el.classList.remove('active');
             });
+
+            root.setProperty('--accent', `var(--accent-${color})`);
             
 
             span.classList.add('active');
@@ -61,3 +63,31 @@ async function initInstructions()  {
 initInstructions();
 
 document.querySelector("#instructions").addEventListener('input', handleChange);
+
+
+/* 
+
+==============
+SKILL HANDLING
+==============
+
+*/
+
+
+const createSkill = (title, instructions) => (
+    `
+    <div class="skills">
+        <label>
+            ${title ? title : 'New skill'}
+            <input type="checkbox"/>
+        </label>
+        <div class="skill-content">
+            <a>Name</a>
+            <input type="text" placeholder="/my-skill" value="${title}">
+            <a>Instructions</a>
+            <textarea placeholder="No more than three paragraphs and more narrative than informational."
+            value="${instructions ? instructions : ''}"></textarea>
+        </div>
+    </div>
+    `
+)
