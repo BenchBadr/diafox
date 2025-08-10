@@ -86,6 +86,10 @@ const createSkill = (title, instructions) => {
     checkbox.type = 'checkbox';
     label.appendChild(checkbox);
 
+    const deleteBtn = document.createElement('a');
+    deleteBtn.classList.add('delete');
+    label.append(deleteBtn);
+
     // Skill content
     const skillContent = document.createElement('div');
     skillContent.className = 'skill-content';

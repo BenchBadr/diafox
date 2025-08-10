@@ -208,7 +208,6 @@ textarea {
 
 .skills label {
   user-select: none;
-  display: block;
   padding:5px;
   cursor:pointer;
   box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.08);
@@ -217,8 +216,26 @@ textarea {
   display: flex;
   align-items: center;
 
-  background:var(--accent-op-50);
+  background:var(--accent-op-20);
   border:1px solid var(--bg);
+
+  a.delete{
+    font-size:125%;
+    margin-left:auto;
+    height:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover{
+      color:var(--accent-red);
+    }
+  }
+  a.delete::before {
+    font-family: Material Icons;
+    content:'delete_outline';
+
+  }
 }
 
 .skills input[type="checkbox"]{
@@ -285,8 +302,6 @@ textarea {
   content: 'chevron_right';
 
   font-size:150%;
-
-  margin-left: auto;
 
   transition-duration:.2s;
 
