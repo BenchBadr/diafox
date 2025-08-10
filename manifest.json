@@ -16,7 +16,7 @@
         "default_panel": "sidebar/panel.html"
     },
 
-    "permissions": ["storage", "tabs"],
+    "permissions": ["storage", "tabs", "cookies"],
 
     "commands": {
     "_execute_sidebar_action": {
@@ -25,5 +25,13 @@
         "mac": "Command+Shift+E"
       }
     }
+  },
+
+  "action": {
+    "default_icon": {
+      "48": "icons/icon_48x48.png"
+    },
+    "default_title": "DiaFox Settings",
+    "default_popup": "popup/settings.html"
   }
 }
