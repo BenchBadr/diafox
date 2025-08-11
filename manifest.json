@@ -16,7 +16,7 @@
         "default_panel": "sidebar/panel.html"
     },
 
-    "permissions": ["storage", "tabs", "cookies"],
+    "permissions": ["storage", "tabs", "cookies", "theme"],
 
     "commands": {
     "_execute_sidebar_action": {

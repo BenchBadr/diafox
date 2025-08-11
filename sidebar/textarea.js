@@ -4,9 +4,11 @@
  * wide: textarea \n toolbox (block each)
  */
 
+const promptWrap = document.querySelector('.prompt-wrap');
+const textarea = document.getElementById('prompt');
+const sendBtn = promptWrap.querySelector('.send-btn');
+
 document.addEventListener('DOMContentLoaded', () => {
-  const promptWrap = document.querySelector('.prompt-wrap');
-  const textarea = document.getElementById('prompt');
   let textareaWidth = textarea.clientWidth;
   
   function checkForWrapping() {
@@ -41,4 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
   checkForWrapping();
+});
+
+
+// Auto add / remove empty class to send btn
+// (kind of a disabled effect)
+textarea.oninput = (event) => {
+    const promptValue = event.target.value;
+    if (promptValue.length) {
+        sendBtn.classList.remove('empty');
+    } else {
+        sendBtn.classList.add('empty');
+    }
+};
+
+
+// Shift + Enter = line break
+// Enter = send
+textarea.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendBtn.click();
+    }
 });

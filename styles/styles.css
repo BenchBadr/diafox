@@ -9,6 +9,7 @@
   --text:var(--dark);
   --high-bg:var(--high-light);
 
+  --text-op-low: color-mix(in srgb, transparent 90%, var(--text));
   --text-op: color-mix(in srgb, transparent 80%, var(--text));
   --text-op-high: color-mix(in srgb, transparent 20%, var(--text));
 
@@ -35,6 +36,14 @@
 
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
+@media (prefers-color-scheme: light) {
+  html {
+    --bg: var(--dark) !important;
+    --text: var(--light) !important;
+    --high-bg: var(--high-dark) !important;
+    --accent-white: #fafafa !important;
+  }
+}
 
 body {
     background:var(--bg);
@@ -202,7 +211,7 @@ textarea {
   align-items: center;
 
   background:var(--accent-op-20);
-  border:1px solid var(--bg);
+  border:1px solid var(--accent-op-20);
 
   a.delete{
     font-size:125%;
@@ -344,6 +353,8 @@ textarea {
   width:1.6em;
   height:1.6em;
 
+  color:black;
+
   &.empty{
     opacity:.8;
     background:var(--text-op);
@@ -388,5 +399,55 @@ textarea {
 
   .toolbox{
     padding-bottom:1em;
+  }
+}
+
+
+.assist {
+  --dim: 30px;
+  --pad: 8px;
+
+  font-family: Material Icons;
+  border: 1px solid var(--text-op-low);
+  height: var(--dim);
+  width: var(--dim);
+  border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition-duration:.2s;
+  cursor:pointer;
+
+  &:hover{
+    transform:scale(1.1);
+
+    &::after{
+      animation: rotate-border 2s linear infinite;
+    }
+  }
+}
+
+.assist::after {
+  content: "";
+  
+  height:calc(var(--dim) - var(--pad));
+  width:calc(var(--dim) - var(--pad));
+
+  border: 2px dotted var(--text-op);
+  border-radius: 50%;
+  box-sizing: border-box;
+  pointer-events: none;
+
+  animation: rotate-border 3s linear infinite;
+}
+
+@keyframes rotate-border {
+  100% {
+    transform: rotate(360deg);
   }
 }
