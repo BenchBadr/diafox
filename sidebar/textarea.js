@@ -92,7 +92,41 @@ function sendMsg(content) {
     document.querySelector('.msgs').appendChild(ctxClone)
     document.querySelector('.msgs').appendChild(msgDiv);
 
-    sendAnswer('# Hello\n\nThis is **bold** text with `code` and math: $x=2x+\\frac{1}{2}+\\sqrt2$');
+    // Markdown showcase
+    const showcase = `
+# Markdown Showcase
+
+## Code Block
+
+\`\`\`javascript
+function helloWorld() {
+    console.log("Hello, world!");
+}
+\`\`\`
+
+## LaTeX
+
+Inline math: $E = mc^2$
+
+Block math:
+$$
+\\int_{a}^{b} x^2 dx = \\frac{b^3 - a^3}{3}
+$$
+
+## Table
+
+| Name   | Age | City      |
+|--------|-----|-----------|
+| Alice  | 24  | New York  |
+| Bob    | 29  | London    |
+| Carol  | 31  | Paris     |
+
+## Blockquote
+
+> This is a blockquote example.
+    `;
+
+    sendAnswer(showcase);
 }
 
 document.querySelector('.send-btn').onclick = function() {

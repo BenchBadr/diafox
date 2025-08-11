@@ -30,8 +30,8 @@ function sanitizeHtml(div) {
 
 export const highlightAll = async (root) => {
     const skills = await getCookie('skills');
-    const skillsNames = Object.keys(skills)
-    const prefixedSkills = skillsNames.map(skill => '/' + skill);
+    const skillsNames = skills ? Object.keys(skills) : [];
+    const prefixedSkills = skillsNames ? skillsNames.map(skill => '/' + skill) : [];
 
     // reversed so it matches bigger then smaller
     // preventing from breaking big matches with subsets
