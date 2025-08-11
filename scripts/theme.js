@@ -41,3 +41,5 @@ browser.theme.getCurrent().then(applyFirefoxTheme);
 browser.theme.onUpdated.addListener((update) => {
   applyFirefoxTheme(update.theme);
 });
+
+let firstMsg = true;

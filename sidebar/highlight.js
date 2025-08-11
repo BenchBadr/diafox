@@ -1,3 +1,4 @@
+// track if first message sent
 
 /** Get {favicon, title, url} based on tab ID
  * 
@@ -116,18 +117,18 @@ export function highlight(div, queries) {
         const containerCtx = document.querySelector('.ctx-cards');
         let toDestroy = div.textContent;
         const activeId = await browser.tabs.query({active: true, currentWindow: true}).then(([tab]) => tab.id);
-        console.log('ACTIVE', activeId);
+
         containerCtx.innerHTML = '';
         for (const query of queries) {
             if (query.startsWith('@')) {
                 const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
                 const match = regex.exec(toDestroy);
                 if (match) {
-                    addCtxCard(query.slice(1), query === `@${activeId}`);
+                    addCtxCard(query.slice(1), firstMsg && query === `@${activeId}`);
                     if (match) {
                         toDestroy = toDestroy.slice(0, match.index) + toDestroy.slice(match.index + match[0].length);
                     }
-                } else if (query === `@${activeId}`) {
+                } else if (firstMsg && query === `@${activeId}`) {
                     addCtxCard(query.slice(1), true)
                 }
             }
@@ -151,14 +152,16 @@ const updateActivePreview = async () => {
     addCtxCard(activeId, true);
 };
 
-updateActivePreview();
-
-browser.tabs.onActivated.addListener(() => {
+if (firstMsg) {
     updateActivePreview();
-});
 
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.active) {
+    browser.tabs.onActivated.addListener(() => {
         updateActivePreview();
-    }
-});
+    });
+
+    browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        if (changeInfo.active) {
+            updateActivePreview();
+        }
+    });
+}
