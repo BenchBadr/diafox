@@ -11,6 +11,9 @@ let activeIdx = 0;
 // to check later on whether to rerender or not suggestions list
 let isNavigatingSuggestions = false;
 
+// Store reference to the arrow handler for proper cleanup
+let currentArrowHandler = null;
+
 
 function sanitizeHtml(div) {
     const allowedTags = ['BR', 'MARK'];
@@ -76,7 +79,7 @@ const updateActiveSuggestion = () => {
         if (index === activeIdx) {
             element.classList.add('active');
             // Auto-scroll to the active suggestion
-            element.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            element.scrollIntoView({ block: 'nearest' });
         } else {
             element.classList.remove('active');
         }
@@ -127,7 +130,7 @@ const suggestTabs = async (query) => {
     const tabs = await browser.tabs.query({});
 
     tabs.forEach((tab) => {
-        if (tab.title && tab.title.toLowerCase().startsWith(query.toLowerCase())) {
+        if (tab.title.toLowerCase().includes(query.toLowerCase())) {
             const span = document.createElement('span');
             span.classList.add('tab-results');
 
@@ -202,6 +205,12 @@ const insertSuggestion = () => {
     activeIdx = 0;
     suggestions.innerHTML = '';
 
+    // Remove arrow handler when suggestion is inserted
+    if (currentArrowHandler) {
+        textarea.removeEventListener('keydown', currentArrowHandler);
+        currentArrowHandler = null;
+    }
+
     // re-highlight
     highlightAll(textarea);
 };
@@ -232,6 +241,12 @@ const logCaret = async (click) => {
         isNavigatingSuggestions = false;
     }
 
+    // Remove existing arrow handler if any
+    if (currentArrowHandler) {
+        textarea.removeEventListener('keydown', currentArrowHandler);
+        currentArrowHandler = null;
+    }
+
     // rerender suggestions
     if (!isNavigatingSuggestions) {
         const selection = window.getSelection();
@@ -248,21 +263,21 @@ const logCaret = async (click) => {
                 e.preventDefault();
                 isNavigatingSuggestions = true;
                 activeIdx = (activeIdx - 1 + suggesting.length) % suggesting.length;
+                updateActiveSuggestion();
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 isNavigatingSuggestions = true;
                 activeIdx = (activeIdx + 1) % suggesting.length;
+                updateActiveSuggestion();
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 insertSuggestion();
-            } else {
-                isNavigatingSuggestions = false;
-                activeIdx = 0;
-                suggesting = [];
-            }
-
+            } 
         };
-        textarea.addEventListener('keydown', handleArrow, { once: true });
+        
+        // Store reference to the handler for proper cleanup
+        currentArrowHandler = handleArrow;
+        textarea.addEventListener('keydown', handleArrow);
     }
 }
 
