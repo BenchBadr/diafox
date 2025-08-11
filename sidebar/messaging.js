@@ -101,17 +101,16 @@ const suggestSkills = async (query) => {
             }
 
             span.textContent = skill;
-            suggestions.appendChild(span);
-
-            // Click interaction not working,
-            // Only keyboard shortcuts for now
-            span.onclick = (e) => {
+            
+            const currentIndex = suggestingList.length;
+            span.onmousedown = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                activeIdx = suggestingList.length;
+                activeIdx = currentIndex;
                 insertSuggestion();
             };
 
+            suggestions.appendChild(span);
             suggestingList.push('/' + skill);
         }
     });
@@ -146,8 +145,15 @@ const suggestTabs = async (query) => {
             icon.src = tab.favIconUrl;
             span.prepend(icon);
 
-            suggestions.appendChild(span);
+            const currentIndex = suggestingList.length;
+            span.onmousedown = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                activeIdx = currentIndex;
+                insertSuggestion();
+            };
 
+            suggestions.appendChild(span);
             suggestingList.push('@' + tab.id);
         }
     });
