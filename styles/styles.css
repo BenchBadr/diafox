@@ -597,7 +597,7 @@ span.tab-results {
 }
 
 .ctx-cards {
-  display: block;
+  display: flex;
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
@@ -609,11 +609,13 @@ span.tab-results {
   }
 
   &:has(.ctx-card){
-    padding: 15px;
+    padding-left: 15px;
+    padding-top: 15px;
   }
 }
 
 .ctx-card{
+  flex: 0 0 auto;
   height:40px;
   width:150px;
   background:var(--text-op);
@@ -662,4 +664,9 @@ span.tab-results {
     font-weight: 500;
     margin-top:5px;
   }
+}
+
+.ctx-card.active-tab {
+  order: -1 !important;
+  background: color-mix(in srgb, var(--accent-op-30) 10%, var(--high-bg) 90%);
 }

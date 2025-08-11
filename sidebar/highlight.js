@@ -17,7 +17,7 @@ async function getTabInfo(tabId) {
 /**
  * Add context card
  */
-const addCtxCard = async (id) => {
+const addCtxCard = async (id, activeTab) => {
     const containerCtx = document.querySelector('.ctx-cards');
 
     const data = await getTabInfo(id);
@@ -44,6 +44,9 @@ const addCtxCard = async (id) => {
     card.append(wrapText);
 
     card.classList.add('ctx-card');
+    if (activeTab) {
+        card.classList.add('active-tab');
+    }
     containerCtx.prepend(card);
 }
 
@@ -104,23 +107,58 @@ export function highlight(div, queries) {
         }
 
 
+    }
+
+    async function createCtxPreviews() {
         // Take care of ctxCards only for queries that are actually in the text
-        // destroy to avoid @5 to match becauseof @59
+        // destroy to avoid @5 to match because of @59
         // already reversed big numbers first so it works
         const containerCtx = document.querySelector('.ctx-cards');
         let toDestroy = div.textContent;
+        const activeId = await browser.tabs.query({active: true, currentWindow: true}).then(([tab]) => tab.id);
+        console.log('ACTIVE', activeId);
         containerCtx.innerHTML = '';
         for (const query of queries) {
             if (query.startsWith('@')) {
-            const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-            const match = regex.exec(toDestroy);
-            if (match) {
-                addCtxCard(query.slice(1));
-                toDestroy = toDestroy.slice(0, match.index) + toDestroy.slice(match.index + match[0].length);
-            }
+                const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+                const match = regex.exec(toDestroy);
+                if (match) {
+                    addCtxCard(query.slice(1), query === `@${activeId}`);
+                    if (match) {
+                        toDestroy = toDestroy.slice(0, match.index) + toDestroy.slice(match.index + match[0].length);
+                    }
+                } else if (query === `@${activeId}`) {
+                    addCtxCard(query.slice(1), true)
+                }
             }
         }
     }
 
     setCaretPosition(div, start);
+    createCtxPreviews();
 }
+
+
+
+// On init, create active page preview and update on active tab change
+const updateActivePreview = async () => {
+    const activeId = await browser.tabs.query({active: true, currentWindow: true}).then(([tab]) => tab.id);
+    const containerCtx = document.querySelector('.ctx-cards');
+    if (containerCtx) {
+        const activeCard = containerCtx.querySelector('.ctx-card.active-tab');
+        if (activeCard) activeCard.remove();
+    }
+    addCtxCard(activeId, true);
+};
+
+updateActivePreview();
+
+browser.tabs.onActivated.addListener(() => {
+    updateActivePreview();
+});
+
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.active) {
+        updateActivePreview();
+    }
+});
