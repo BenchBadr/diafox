@@ -386,6 +386,12 @@ textarea {
   padding:1rem;
   overflow:scroll;
   width:calc(100% - 2rem);
+
+  caret-color: var(--accent);
+
+  &::selection {
+    background: var(--accent-op-30);
+  }
 }
 
 .prompt-wrap {
@@ -450,4 +456,23 @@ textarea {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.msgs {
+  height:calc(70vh - 2em);
+  padding-bottom:30vh;
+  overflow:scroll;
+  width:100%;
+}
+
+.msg-user {
+  position: relative;
+  background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
+  padding: 8px 15px;
+  border-radius: 1rem;
+  display: block;
+  width: fit-content;
+  max-width: 70%;
+  margin: 5px 0 5px auto;
+  white-space: pre-wrap;
 }
