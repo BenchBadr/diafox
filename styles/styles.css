@@ -32,6 +32,13 @@
   --accent-op-30: color-mix(in srgb, var(--accent) 30%, transparent 70%);
   --accent-op-40: color-mix(in srgb, var(--accent) 40%, transparent 60%);
   --accent-op-50: color-mix(in srgb, var(--accent) 50%, transparent 50%);
+
+  --current-op-10:color-mix(in srgb, currentColor 10%, transparent 90%);
+  --current-op-20:color-mix(in srgb, currentColor 20%, transparent 80%);
+  --current-op-30:color-mix(in srgb, currentColor 30%, transparent 70%);
+  --current-op-40:color-mix(in srgb, currentColor 40%, transparent 60%);
+  --current-op-50:color-mix(in srgb, currentColor 50%, transparent 50%);
+  --current-op-80:color-mix(in srgb, currentColor 80%, transparent 20%);
 }
 
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
@@ -261,7 +268,7 @@ textarea, #prompt {
   padding:5px;
 }
 
-.skills label::before{
+.skills label::before, .res-skill::before{
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -481,13 +488,6 @@ mark {
   padding:0 1rem;
 }
 
-.suggestions{
-  background:var(--high-bg);
-  width:calc(100% - 3rem);
-  margin-left:auto;
-  margin-right:auto;
-}
-
 .msgs {
   height:calc(70vh - 2em);
   padding-bottom:30vh;
@@ -520,4 +520,38 @@ mark {
     opacity:1;
     transform: translateY(0) scale(1);
   }
+}
+
+
+.suggestions{
+  background:var(--high-bg);
+  width:calc(100% - 3rem);
+  margin-left:auto;
+  margin-right:auto;
+
+  border-radius: 10px 10px 0 0;
+
+  span {
+    text-decoration: none;
+    border-radius: 5px;
+    padding:5px 5px;
+    display: block;
+    user-select: none;
+    overflow: scroll;
+    overflow: hidden;
+
+    &:hover{
+      background:var(--current-op-10);
+    }
+
+  }
+}
+
+
+.prompt-area .suggestions {
+  display: none;
+}
+
+.prompt-area:focus-within .suggestions {
+  display: block;
 }
