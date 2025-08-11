@@ -544,6 +544,11 @@ mark {
       background:var(--current-op-10);
     }
 
+    &.active{
+      background:var(--current-op-10);
+      color:var(--accent);
+    }
+
   }
 }
 
