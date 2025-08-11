@@ -65,18 +65,12 @@ img.blob{
 }
 
 .prompt-wrap{
-    background:var(--high-bg);
-    border-radius: 1rem;
-    backdrop-filter:blur(15px);
-}
+  background:var(--high-bg);
+  border-radius: 1rem;
+  backdrop-filter:blur(15px);
 
-
-.prompt-wrap {
-  width: calc(100% - 1rem);
   background: var(--bg-prompt);
   overflow: scroll;
-
-  margin-bottom:auto;
 
 
   border-radius: 1.5rem;
@@ -84,9 +78,6 @@ img.blob{
   color: var(--text);
 
   border:1px solid var(--text-op);
-
-  position:fixed;
-  bottom:1em;
 
   overflow: hidden;
 }
@@ -398,6 +389,7 @@ textarea, #prompt {
   display: flex;
   align-items: center;
   transition: all 0.3s ease;
+  width:100%;
 }
 
 .prompt-wrap.wide {
@@ -458,26 +450,6 @@ textarea, #prompt {
   }
 }
 
-.msgs {
-  height:calc(70vh - 2em);
-  padding-bottom:30vh;
-  overflow:scroll;
-  width:100%;
-}
-
-.msg-user {
-  position: relative;
-  background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
-  padding: 8px 15px;
-  border-radius: 1rem;
-  display: block;
-  width: fit-content;
-  max-width: 70%;
-  margin: 5px 0 5px auto;
-  white-space: pre-wrap;
-  overflow:scroll;
-  overflow: hidden;
-}
 
 
 #prompt {
@@ -496,4 +468,56 @@ mark {
   color:var(--accent);
   font-weight: bold;
   background: transparent;
+}
+
+.prompt-area{
+  position:fixed;
+  bottom:1em;
+  left:0;
+  width:calc(100% - 2rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding:0 1rem;
+}
+
+.suggestions{
+  background:var(--high-bg);
+  width:calc(100% - 3rem);
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.msgs {
+  height:calc(70vh - 2em);
+  padding-bottom:30vh;
+  overflow:scroll;
+  width:100%;
+}
+
+.msg-user {
+  position: relative;
+  background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
+  padding: 8px 15px;
+  border-radius: 1rem;
+  display: block;
+  width: fit-content;
+  max-width: 70%;
+  margin: 5px 0 5px auto;
+  white-space: pre-wrap;
+  overflow: scroll;
+  overflow: hidden;
+
+  animation: msgUserAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes msgUserAppear {
+  from {
+    opacity:0;
+    transform: translateY(100vh) scale(3);
+  }
+  to {
+    opacity:1;
+    transform: translateY(0) scale(1);
+  }
 }

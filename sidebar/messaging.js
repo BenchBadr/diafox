@@ -35,8 +35,6 @@ textarea.oninput = (event) => {
 
     highlightSkills(div)
 
-    // highlight(div, 'test');
-
     // Update send button state based
     const promptValue = div.textContent || '';
     if (promptValue.trim().length) {
