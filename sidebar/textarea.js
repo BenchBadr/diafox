@@ -89,16 +89,12 @@ document.querySelector('.send-btn').onclick = function() {
         textarea.innerHTML = '';
         // Reset the empty state after clearing content
         sendBtn.classList.add('empty');
+
+        const ctxContainer = document.querySelector('ctx-cards');
+        if (ctxContainer) {
+            ctxContainer.innerHTML = '';
+        }
     }
 };
 
-
-/*
-=================
-
-FLOATING MENUS
-
-=================
-
-*/
 

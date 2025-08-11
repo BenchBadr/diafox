@@ -3,9 +3,9 @@ import { highlight } from './highlight.js';
 
 const suggestions = document.querySelector('.suggestions');
 const textarea = document.getElementById('prompt');
+
 const promptWrap = document.querySelector('.prompt-wrap');
 const sendBtn = promptWrap.querySelector('.send-btn');
-
 
 /* Global variables */
 let suggesting = 0;
@@ -37,7 +37,6 @@ const highlightAll = async (root) => {
     // preventing from breaking big matches with subsets
     const activeTabs = await browser.tabs.query({}).then(tabs => tabs.map(t => '@' + t.id).reverse());
 
-    console.log(activeTabs, 'active tabs')
     const allHighlights = [...prefixedSkills, ...activeTabs];
 
         
@@ -264,11 +263,13 @@ const logCaret = async (click) => {
         const handleArrow = (e) => {
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
+                e.stopPropagation();
                 isNavigatingSuggestions = true;
                 activeIdx = (activeIdx - 1 + suggesting.length) % suggesting.length;
                 updateActiveSuggestion();
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
+                e.stopPropagation();
                 isNavigatingSuggestions = true;
                 activeIdx = (activeIdx + 1) % suggesting.length;
                 updateActiveSuggestion();
@@ -285,7 +286,12 @@ const logCaret = async (click) => {
 }
 
 
-textarea.addEventListener('keyup', () => logCaret());
+textarea.addEventListener('keyup', (e) => {
+    // Don't trigger logCaret on arrow keys to prevent interference with suggestion navigation
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
+        return;
+    }
+    logCaret();
+});
 textarea.addEventListener('click', () => logCaret(true));
-
 
