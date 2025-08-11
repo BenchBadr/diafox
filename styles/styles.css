@@ -1,4 +1,5 @@
 :root{
+
   --dark:#101010;
   --light:#f9f9fa;
   --high-dark:#2d2d2d;
@@ -44,13 +45,11 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 
-@media (prefers-color-scheme: light) {
-  html {
-    --bg: var(--dark) !important;
-    --text: var(--light) !important;
-    --high-bg: var(--high-dark) !important;
-    --accent-white: #fafafa !important;
-  }
+[data-mode=dark] {
+  --bg: var(--dark) !important;
+  --text: var(--light) !important;
+  --high-bg: var(--high-dark) !important;
+  --accent-white: #fafafa !important;
 }
 
 body {
@@ -747,6 +746,7 @@ mjx-container {
 
 .markdown-body{
   font-family: Helvetica, sans-serif;
+  padding:5px;
 
   h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
@@ -792,10 +792,26 @@ mjx-container {
     font-weight: bold;
   }
 
-  code {
+  :not(pre) > code {
     background:var(--high-bg);
     border:1px solid var(--current-op-30);
     border-radius: 3px;
     padding:1px 1px;
+  }
+
+  blockquote {
+    padding:unset;
+    margin-left:.5em;
+    border-left:2px solid;
+    padding:5px .5em;
+    color:var(--current-op-50);
+  }
+
+  pre > code * {
+    font-size: 10px;
+  }
+
+  pre > code{
+    line-height: .2;
   }
 }

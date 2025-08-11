@@ -25,6 +25,10 @@ async function applyFirefoxTheme(theme) {
     root.setProperty("--text", "var(--light)");
     root.setProperty("--high-bg", "var(--high-dark)");
     root.setProperty("--accent-white", "#fafafa");
+
+    document.documentElement.setAttribute('data-mode', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-mode', 'light');
   }
 
   const accent = await getCookie('accent');

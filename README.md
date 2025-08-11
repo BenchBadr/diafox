@@ -24,21 +24,34 @@ Below a check-list of the development progress.
 ## 1. Appearance
 
 - [x] Toggle sidebar with `Cmd/Ctrl`+`Shift` + `E`
-    - Note : Firefox based browsers prevent shortcuts overwriting by extension
 - [x] Skill auto-suggest
+- [x] Tabs auto-suggest
+- 1.1 Markdown
+    - [x] Basic `markdown-it`
+    - [x] LaTeX with MathJax
+    - [ ] CodeBlocks
+        - [ ] Rendering
+        - [ ] Toolbar with lang and copy btn
 
 ## 2. Customization
 
+- [x] Change accent color
 - [x] Custom instructions
 - [x] Create and save skills
 
 ## 3. Functionnalities
 
-- [ ] @mention tabs to add context
+- [x] @mention tabs to add context
 - [ ] Chat with Youtube
 - [ ] Chat with PDFs
 - [ ] Model switcher
 - [ ] Agentic capabilities (Tool-calling)
+
+
+## 4. Distant future
+
+- [ ] Use session token of AI chat services to retrieve answer
+- [ ] Use local inferences with ollama
 
 # Status
 
