@@ -3,6 +3,15 @@ import { highlight } from './highlight.js';
 
 const suggestions = document.querySelector('.suggestions');
 
+
+/* Global variables */
+let suggesting = 0;
+let activeIdx = 0;
+
+// to check later on whether to rerender or not suggestions list
+let isNavigatingSuggestions = false;
+
+
 function sanitizeHtml(div) {
     const allowedTags = ['BR', 'MARK'];
     Array.from(div.childNodes).forEach(node => {
@@ -31,28 +40,46 @@ const highlightAll = async (root) => {
  * 
  * @param {*} selection 
  */
-const getSuggestions = (selection, activeIdx) => {
+const getSuggestions = async (selection) => {
     suggestions.innerHTML = '';
+    activeIdx = 0;
 
     const range = selection.getRangeAt(0);
     const current = range.startContainer.textContent.slice(0, range.startOffset).split(' ');
     const command = current[current.length - 1];
 
-    let suggesting = false;
+    let suggestingList = [];
     
     if (command.startsWith('/')) {
-        suggesting = suggestSkills(command.slice(1), activeIdx);
+        suggestingList = suggestSkills(command.slice(1));
     }
     
-    return suggesting;
+    return suggestingList;
+}
+
+/**
+ * Updates the active element
+ * - Thiis is essentially meant to prevent complete 
+ * - Rerender of suggestions on navigating
+ * 
+ */
+const updateActiveSuggestion = () => {
+    const suggestionElements = suggestions.querySelectorAll('.res-skill');
+    suggestionElements.forEach((element, index) => {
+        if (index === activeIdx) {
+            element.classList.add('active');
+        } else {
+            element.classList.remove('active');
+        }
+    });
 }
 
 
-const suggestSkills = async (query, activeIdx) => {
+const suggestSkills = async (query) => {
     const skills = await getCookie('skills');
     const skillsNames = Object.keys(skills);
 
-    let suggesting = 0;
+    const suggestingList = [];
 
     skillsNames.forEach((skill, index) => {
         if (skill === 'undefined') return;
@@ -67,12 +94,50 @@ const suggestSkills = async (query, activeIdx) => {
             span.textContent = skill;
             suggestions.appendChild(span);
 
-            suggesting++;
+            suggestingList.push('/' + skill);
         }
     });
 
-    return suggesting;
+    return suggestingList;
 }
+
+/**
+ * Inserts the currently active suggestion into the textarea at the caret position.
+ */
+const insertSuggestion = () => {
+    if (!suggesting || !suggesting.length) return;
+
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    const textNode = range.startContainer;
+    const offset = range.startOffset;
+
+    // Find the start of the command (e.g., "/ski")
+    const text = textNode.textContent;
+    const beforeCaret = text.slice(0, offset);
+    const afterCaret = text.slice(offset);
+    const lastSpaceIdx = beforeCaret.lastIndexOf(' ');
+    const commandStart = lastSpaceIdx === -1 ? 0 : lastSpaceIdx + 1;
+
+    // Replace the command with the selected suggestion
+    const newText =
+        beforeCaret.slice(0, commandStart) +
+        suggesting[activeIdx] +
+        afterCaret;
+
+    // Update the text node and set caret after inserted suggestion
+    textNode.textContent = newText;
+    const newOffset = commandStart + suggesting[activeIdx].length;
+
+    // Move caret to the end of the inserted suggestion
+    const newRange = document.createRange();
+    newRange.setStart(textNode, newOffset);
+    newRange.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+};
 
 
 textarea.oninput = (event) => {
@@ -93,33 +158,49 @@ textarea.oninput = (event) => {
 };
 
 
-let suggesting = 0;
-let activeIdx = 0;
-
-const logCaret = async () => {
-    // renew / clear suggestions
-    const selection = window.getSelection();
-    if (selection.isCollapsed) {
-        suggesting = await getSuggestions(selection, activeIdx);
+const logCaret = async (click) => {
+    // clear active states
+    if (click) {
+        suggesting = [];
+        isNavigatingSuggestions = false;
+    }
+    // rerender suggestions
+    if (!isNavigatingSuggestions) {
+        const selection = window.getSelection();
+        if (selection.isCollapsed) {
+            suggesting = await getSuggestions(selection);
+            // isNavigatingSuggestions = true;
+        }
+    } else {
+        updateActiveSuggestion();
     }
 
-    if (suggesting) {
+    if (suggesting.length) {
         const handleArrow = (e) => {
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                activeIdx = (activeIdx + 1) % suggesting;
+                isNavigatingSuggestions = true;
+                activeIdx = (activeIdx + 1) % suggesting.length;
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                isNavigatingSuggestions = true;
+                activeIdx = (activeIdx + 1) % suggesting.length;
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                insertSuggestion();
+                highlightAll(textarea);
+                activeIdx = 0;
+            } else {
+                isNavigatingSuggestions = false;
+                activeIdx = 0;
+                suggesting = [];
             }
 
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                activeIdx = (activeIdx + 1) % suggesting;
-            }
-            console.log(activeIdx, suggesting)
         };
         textarea.addEventListener('keydown', handleArrow, { once: true });
     }
 }
 
 
-textarea.addEventListener('keyup', logCaret);
-textarea.addEventListener('click', logCaret);
+textarea.addEventListener('keyup', () => logCaret());
+textarea.addEventListener('click', () => logCaret(true));
