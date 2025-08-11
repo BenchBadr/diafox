@@ -200,6 +200,7 @@ const insertSuggestion = () => {
     suggesting = 0;
     isNavigatingSuggestions = false;
     activeIdx = 0;
+    suggestions.innerHTML = '';
 
     // re-highlight
     highlightAll(textarea);
