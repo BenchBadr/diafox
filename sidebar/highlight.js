@@ -19,7 +19,7 @@ async function getTabInfo(tabId) {
  * Add context card
  */
 const addCtxCard = async (id, activeTab) => {
-    const containerCtx = document.querySelector('.ctx-cards');
+    const containerCtx = document.querySelector('.ctx-cards:not(.msgPrev)');
 
     const data = await getTabInfo(id);
 
@@ -114,7 +114,7 @@ export function highlight(div, queries) {
         // Take care of ctxCards only for queries that are actually in the text
         // destroy to avoid @5 to match because of @59
         // already reversed big numbers first so it works
-        const containerCtx = document.querySelector('.ctx-cards');
+        const containerCtx = document.querySelector('.ctx-cards:not(.msgPrev)');
         let toDestroy = div.textContent;
         const activeId = await browser.tabs.query({active: true, currentWindow: true}).then(([tab]) => tab.id);
 
@@ -142,9 +142,11 @@ export function highlight(div, queries) {
 
 
 // On init, create active page preview and update on active tab change
+if (firstMsg) {
+    console.log(firstMsg)
 const updateActivePreview = async () => {
     const activeId = await browser.tabs.query({active: true, currentWindow: true}).then(([tab]) => tab.id);
-    const containerCtx = document.querySelector('.ctx-cards');
+    const containerCtx = document.querySelector('.ctx-cards:not(.msgPrev)');
     if (containerCtx) {
         const activeCard = containerCtx.querySelector('.ctx-card.active-tab');
         if (activeCard) activeCard.remove();
@@ -152,7 +154,7 @@ const updateActivePreview = async () => {
     addCtxCard(activeId, true);
 };
 
-if (firstMsg) {
+
     updateActivePreview();
 
     browser.tabs.onActivated.addListener(() => {

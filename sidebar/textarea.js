@@ -79,6 +79,19 @@ function sendMsg(content) {
     const msgDiv = document.createElement('div');
     msgDiv.className = 'msg-user';
     msgDiv.innerHTML = content;
+
+    const ctxClone = document.createElement('div');
+    ctxClone.className = 'ctx-cards msgPrev';
+
+    const ctxContainer = document.querySelector('.ctx-cards:not(.msgPrev)');
+
+    ctxClone.innerHTML = ctxContainer.innerHTML;
+    ctxClone.style.setProperty('--n', ctxContainer.children.length);
+    Array.from(ctxClone.children).forEach((child, idx) => {
+        child.style.setProperty('--idx', idx);
+    });
+
+    document.querySelector('.msgs').appendChild(ctxClone)
     document.querySelector('.msgs').appendChild(msgDiv);
 }
 
@@ -92,7 +105,7 @@ document.querySelector('.send-btn').onclick = function() {
 
         firstMsg = false;
 
-        const ctxContainer = document.querySelector('.ctx-cards');
+        const ctxContainer = document.querySelector('.ctx-cards:not(.msgPrev)');
         if (ctxContainer) {
             ctxContainer.innerHTML = '';
         }
