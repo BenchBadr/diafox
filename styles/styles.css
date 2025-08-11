@@ -319,6 +319,8 @@ textarea {
   padding:5px;
   border-radius: 5px;
 
+  user-select: none;
+
   font-weight: bold;
   cursor:pointer;
 
@@ -329,7 +331,8 @@ textarea {
   transition-duration: .2s;
 
   &:hover{
-    background:var(--accent-op-20);
+    color:var(--text);
+    background:var(--text-op);
   }
 
   &::before{
