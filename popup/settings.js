@@ -158,6 +158,7 @@ const createSkill = (title, instructions) => {
     const textarea = document.createElement('textarea');
     textarea.placeholder = 'No more than three paragraphs and more narrative than informational.';
     textarea.value = instructions ? instructions : '';
+    textarea.addEventListener('input', async (event) => handleInstructionArea(event));
     skillContent.appendChild(textarea);
 
     // Assemble
@@ -168,7 +169,17 @@ const createSkill = (title, instructions) => {
 }
 
 
-
+/**
+ * Handles changes to the skill name input field.
+ * - Sanitizes and formats the new skill title. (alphanumeric + dashes)
+ * - Handle and block duplicate saving
+ * - Update storage
+ * - Update UI
+ *
+ * @async
+ * @param {Event} event - input event
+ * @returns {Promise<void>}
+ */
 const handleSkillChange = async (event) => {
     let newTitle = event.target.value;
     if (newTitle.startsWith('/')){
@@ -185,7 +196,6 @@ const handleSkillChange = async (event) => {
         event.target.style.borderColor = 'red';
         return;
     } else {
-        console.log('deleting',title, 'creating', newTitle)
 
         await deleteSkill(title);
 
@@ -196,15 +206,24 @@ const handleSkillChange = async (event) => {
             labelText.textContent = newTitle || 'New title';
         }
 
-        // Get instructions
         const instructions = skillCont.querySelector('textarea').value;
-        console.log(instructions)
 
         await updateSkills(newTitle, instructions);
         event.target.dataset.originalTitle = newTitle; 
     }
 
     event.target.value = '/' + newTitle;
+}
+
+const handleInstructionArea = async (event) => {
+    // Get active title
+    const skillCont = event.target.parentElement.parentElement;
+    const title = skillCont.querySelector('input[type=text]').value;
+    if (title === '/') {
+        await updateSkills(undefined, event.target.value);
+    } else {
+        await updateSkills(title.slice(1), event.target.value);
+    }
 }
 
 const loadSkills = async () => {
