@@ -492,8 +492,8 @@ textarea, #prompt {
   display: block;
 }
 
-.highlight {
+mark {
   color:var(--accent);
   font-weight: bold;
-  user-select: none;
+  background: transparent;
 }

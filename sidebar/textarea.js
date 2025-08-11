@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const shouldBeWide = 
       textareaWidth < 200 || textWidth > textareaWidth - 2.5 * fontSize || 
-      textarea.innerHTML && textarea.innerHTML.includes('<br>')
+      (textarea.innerHTML && textarea.innerHTML.includes('<br>'))
       
     promptWrap.classList.toggle('wide', shouldBeWide);
   }
@@ -64,6 +64,26 @@ textarea.addEventListener('paste', (event) => {
     text = text.replace(/\r\n?/g, '\n').replace(/\n/g, '<br>');
     document.execCommand('insertHTML', false, text);
 });
+
+
+function sendMsg(content) {
+    textarea.setAttribute('data-placeholder', 'Ask another question...');
+
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'msg-user';
+    msgDiv.innerHTML = content;
+    document.querySelector('.msgs').appendChild(msgDiv);
+}
+
+document.querySelector('.send-btn').onclick = function() {
+    const content = textarea.innerHTML || '';
+    if (content.trim()) {
+        sendMsg(content);
+        textarea.innerHTML = '';
+        // Reset the empty state after clearing content
+        sendBtn.classList.add('empty');
+    }
+};
 
 
 /*
