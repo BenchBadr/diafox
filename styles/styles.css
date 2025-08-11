@@ -359,7 +359,6 @@ textarea {
   margin-left: auto;
   margin-right: 1rem;
   gap:.5em;
-  padding:.2em;
 }
 
 .prompt-wrap .toolbox .add-btn{
@@ -386,4 +385,8 @@ textarea {
 
 .prompt-wrap.wide {
   display: block;
+
+  .toolbox{
+    padding-bottom:1em;
+  }
 }
