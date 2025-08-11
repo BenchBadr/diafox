@@ -5,7 +5,6 @@
   <title>Tabs</title>
   <link rel="stylesheet" href="../styles/styles.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="slideIn">
 
@@ -14,10 +13,18 @@
 
   <!-- Text area -->
   <div class="prompt-wrap scroll-fix">
-    <textarea placeholder="Ask a question about this page..." id="#prompt"></textarea>
+
+    <textarea placeholder="Ask a question about this page..." id="prompt" data-expand></textarea>
+
+    <div class="toolbox">
+      <span class="add-btn">add</span>
+
+      <span class="send-btn empty">arrow_upward</span>
+    </div>
   </div>
 
 
   <script src="../scripts/theme.js"></script>
+  <script src="./textarea.js"></script>
 </body>
 </html>

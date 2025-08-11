@@ -23,13 +23,14 @@ Below a check-list of the development progress.
 
 ## 1. Appearance
 
-- [ ] Toggle sidebar with `Cmd/Ctrl`+`E`
+- [x] Toggle sidebar with `Cmd/Ctrl`+`Shift` + `E`
+    - Note : Firefox based browsers prevent shortcuts overwriting by extension
 - [ ] Skill auto-suggest
 
 ## 2. Customization
 
 - [x] Custom instructions
-- [ ] Create and save skills
+- [x] Create and save skills
 
 ## 3. Functionnalities
 

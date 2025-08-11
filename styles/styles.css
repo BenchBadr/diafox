@@ -62,49 +62,34 @@ img.blob{
 
 
 .prompt-wrap {
-    width: calc(100% - 1rem);
-    background: var(--bg-prompt);
-    overflow: scroll;
-    
-    margin-bottom:auto;
+  width: calc(100% - 1rem);
+  background: var(--bg-prompt);
+  overflow: scroll;
+
+  margin-bottom:auto;
 
 
-    border-radius: 1.5rem;
+  border-radius: 1.5rem;
 
-    color: var(--text);
+  color: var(--text);
 
-    border:1px solid var(--text-op);
+  border:1px solid var(--text-op);
 
-    position:fixed;
-    bottom:1em;
+  position:fixed;
+  bottom:1em;
 
-    overflow: hidden;
-
-    .send{
-        border-radius: 50%;
-        background:var(--accent);
-    }
+  overflow: hidden;
 }
 
 textarea {
-    outline: none;
-    border: none;
-    resize: none;
-    font-size: 1rem;
-    font-family: inherit;
-    background: transparent;
-
-    padding: 1rem;
-
-    width:calc(100% - 2rem);
-    color:var(--text);
-
-   scrollbar-width: none !important; 
-  -ms-overflow-style: none !important;
-
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
+  outline: none;
+  border: none;
+  resize: none;
+  font-size: 1rem;
+  font-family: inherit;
+  background: transparent;
+  color:var(--text);
+  overflow:hidden;
     
 }
 
@@ -341,4 +326,64 @@ textarea {
     margin-right:5px;
     font-size:150%;
   }
+}
+
+
+.prompt-wrap .send-btn{
+  background:var(--accent);
+  border-radius: 50%;
+  font-family: 'Material Icons';
+  font-size:125%;
+  cursor:pointer;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width:1.6em;
+  height:1.6em;
+
+  &.empty{
+    opacity:.8;
+    background:var(--text-op);
+    color:var(--text-op);
+    cursor:auto;
+  }
+}
+
+.prompt-wrap .toolbox{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 1rem;
+  gap:.5em;
+  padding:.2em;
+}
+
+.prompt-wrap .toolbox .add-btn{
+  margin-left: 1rem;
+  font-size: 150%;
+  color:var(--text-op);
+  margin-right: auto;
+  font-family: Material Icons;
+  user-select: none;
+  cursor:pointer;
+}
+
+.prompt-wrap textarea{
+  padding:1rem;
+  overflow:scroll;
+  width:calc(100% - 2rem);
+}
+
+.prompt-wrap {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.prompt-wrap.wide {
+  display: block;
 }
