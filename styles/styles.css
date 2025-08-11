@@ -603,6 +603,7 @@ span.tab-results {
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  user-select: none;
 
   &::-webkit-scrollbar {
     display: none;
@@ -702,4 +703,43 @@ span.tab-results {
     transform: rotate(calc(var(--spread) * var(--idx)));
     z-index:calc(var(--n) - var(--idx));
   }
+}
+
+.ctx-cards.msgPrev .ctx-card .after{
+  display: none;
+}
+
+
+.ctx-cards:not(.msgPrev) {
+  .ctx-card:hover, .ctx-card.active-tab{
+    position:relative;
+    overflow: visible;
+
+    .after{
+      display: block;
+    }
+
+    .after::after{
+      content:'close';
+      font-family: Material Icons;
+      position:absolute;
+      top:-.25em;
+      right:-.25em;
+      background:var(--text-op);
+      border-radius: 50%;
+
+      font-style: normal;
+
+      height:1em;
+      width: 1em;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+mjx-container {
+  pointer-events: none;
 }

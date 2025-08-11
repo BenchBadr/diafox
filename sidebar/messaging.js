@@ -28,7 +28,7 @@ function sanitizeHtml(div) {
     });
 }
 
-const highlightAll = async (root) => {
+export const highlightAll = async (root) => {
     const skills = await getCookie('skills');
     const skillsNames = Object.keys(skills)
     const prefixedSkills = skillsNames.map(skill => '/' + skill);
@@ -42,6 +42,7 @@ const highlightAll = async (root) => {
         
     highlight(root, allHighlights);
 }
+
 
 
 

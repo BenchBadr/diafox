@@ -1,4 +1,5 @@
 // track if first message sent
+import { textareaRemove } from "./textarea.js";
 
 /** Get {favicon, title, url} based on tab ID
  * 
@@ -42,9 +43,24 @@ const addCtxCard = async (id, activeTab) => {
     a.textContent = data.url;
     wrapText.append(a);
 
+
     card.append(wrapText);
 
+    const aft = document.createElement('i');
+    aft.classList.add('after');
+    aft.onclick = () => {
+        card.remove();
+        if (activeTab && firstMsg) {
+            firstMsg = false;
+        }
+
+       textareaRemove(`@${id}`)
+    }
+    card.append(aft);
+
     card.classList.add('ctx-card');
+    card.setAttribute('data-id', id);
+
     if (activeTab) {
         card.classList.add('active-tab');
     }
@@ -143,7 +159,6 @@ export function highlight(div, queries) {
 
 // On init, create active page preview and update on active tab change
 if (firstMsg) {
-    console.log(firstMsg)
 const updateActivePreview = async () => {
     const activeId = await browser.tabs.query({active: true, currentWindow: true}).then(([tab]) => tab.id);
     const containerCtx = document.querySelector('.ctx-cards:not(.msgPrev)');
@@ -154,11 +169,14 @@ const updateActivePreview = async () => {
     addCtxCard(activeId, true);
 };
 
-
+    if (firstMsg) {
     updateActivePreview();
+    }
 
     browser.tabs.onActivated.addListener(() => {
-        updateActivePreview();
+        if (firstMsg) {
+            updateActivePreview();
+        }
     });
 
     browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {

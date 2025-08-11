@@ -45,3 +45,4 @@ browser.theme.onUpdated.addListener((update) => {
 
 // automatically setto false on first msg sent
 let firstMsg = true;
+

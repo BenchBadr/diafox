@@ -1,8 +1,6 @@
-/**
- * Handle toggle wide mode for textarea
- * Normal : <textarea> <toolbox>
- * wide: textarea \n toolbox (block each)
- */
+import { highlightAll } from "./messaging.js";
+import sendAnswer from "./answer/answer.js";
+
 
 const promptWrap = document.querySelector('.prompt-wrap');
 const textarea = document.getElementById('prompt');
@@ -93,6 +91,8 @@ function sendMsg(content) {
 
     document.querySelector('.msgs').appendChild(ctxClone)
     document.querySelector('.msgs').appendChild(msgDiv);
+
+    sendAnswer('# Hello\n\nThis is **bold** text with `code` and math: $x=2x+\\frac{1}{2}+\\sqrt2$');
 }
 
 document.querySelector('.send-btn').onclick = function() {
@@ -113,3 +113,11 @@ document.querySelector('.send-btn').onclick = function() {
 };
 
 
+/**
+ * Textarea replaceAll(smt, '') + rerender
+ * 
+ */
+export const textareaRemove = (query) => {
+    textarea.textContent = textarea.textContent.replaceAll(query, '');
+    highlightAll(textarea);
+}
