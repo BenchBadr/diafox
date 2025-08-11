@@ -668,5 +668,5 @@ span.tab-results {
 
 .ctx-card.active-tab {
   order: -1 !important;
-  background: color-mix(in srgb, var(--accent-op-30) 10%, var(--high-bg) 90%);
+  background: color-mix(in srgb, var(--accent) 5%, var(--text-op) 95%);
 }

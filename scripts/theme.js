@@ -42,4 +42,6 @@ browser.theme.onUpdated.addListener((update) => {
   applyFirefoxTheme(update.theme);
 });
 
+
+// automatically setto false on first msg sent
 let firstMsg = true;
