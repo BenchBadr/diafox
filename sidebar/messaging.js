@@ -19,12 +19,7 @@ textarea.oninput = (event) => {
 
     sanitizeHtml(div);
 
-    console.log('Before highlight:', div.innerHTML);
-
-    // Call highlight with the div element and optional highlighting query
     highlight(div, 'test');
-
-    console.log('After highlight:', div.innerHTML);
 
     // Update send button state based
     const promptValue = div.textContent || '';
