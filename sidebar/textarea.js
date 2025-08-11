@@ -124,6 +124,10 @@ $$
 ## Blockquote
 
 > This is a blockquote example.
+
+## Inline code
+
+\`python\` est un langage de *programmation*
     `;
 
     sendAnswer(showcase);

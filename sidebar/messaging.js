@@ -92,7 +92,7 @@ const updateActiveSuggestion = () => {
 
 const suggestSkills = async (query) => {
     const skills = await getCookie('skills');
-    const skillsNames = Object.keys(skills);
+    const skillsNames = skills ? Object.keys(skills) : [];
 
     const suggestingList = [];
 
