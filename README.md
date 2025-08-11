@@ -25,7 +25,7 @@ Below a check-list of the development progress.
 
 - [x] Toggle sidebar with `Cmd/Ctrl`+`Shift` + `E`
     - Note : Firefox based browsers prevent shortcuts overwriting by extension
-- [ ] Skill auto-suggest
+- [x] Skill auto-suggest
 
 ## 2. Customization
 

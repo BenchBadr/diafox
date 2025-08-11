@@ -3,11 +3,6 @@ import { highlight } from './highlight.js';
 
 const suggestions = document.querySelector('.suggestions');
 
-suggestions.addEventListener('click', (e) => {
-    e.stopPropagation();
-    console.log('damn click')
-});
-
 
 /* Global variables */
 let suggesting = 0;
@@ -32,7 +27,12 @@ const highlightAll = async (root) => {
     const skillsNames = Object.keys(skills)
     const prefixedSkills = skillsNames.map(skill => '/' + skill);
 
-    const allHighlights = [...prefixedSkills];
+    // reversed so it matches bigger then smaller
+    // preventing from breaking big matches with subsets
+    const activeTabs = await browser.tabs.query({}).then(tabs => tabs.map(t => '@' + t.id).reverse());
+
+    console.log(activeTabs, 'active tabs')
+    const allHighlights = [...prefixedSkills, ...activeTabs];
 
         
     highlight(root, allHighlights);
@@ -57,6 +57,8 @@ const getSuggestions = async (selection) => {
     
     if (command.startsWith('/')) {
         suggestingList = await suggestSkills(command.slice(1));
+    } else if (command.startsWith('@')) {
+        suggestingList = suggestTabs(command.slice(1));
     }
     
     return suggestingList;
@@ -69,10 +71,12 @@ const getSuggestions = async (selection) => {
  * 
  */
 const updateActiveSuggestion = () => {
-    const suggestionElements = suggestions.querySelectorAll('.res-skill');
+    const suggestionElements = suggestions.querySelectorAll('.res-skill, .tab-results');
     suggestionElements.forEach((element, index) => {
         if (index === activeIdx) {
             element.classList.add('active');
+            // Auto-scroll to the active suggestion
+            element.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         } else {
             element.classList.remove('active');
         }
@@ -98,18 +102,53 @@ const suggestSkills = async (query) => {
 
             span.textContent = skill;
             suggestions.appendChild(span);
+
+            // Click interaction not working,
+            // Only keyboard shortcuts for now
             span.onclick = (e) => {
-                console.log('CLIIIIICK')
                 e.preventDefault();
                 e.stopPropagation();
-                console.log(skill);
-
                 activeIdx = suggestingList.length;
-                
                 insertSuggestion();
             };
 
             suggestingList.push('/' + skill);
+        }
+    });
+
+    return suggestingList;
+}
+
+/**
+ * Suggest tabs among the open ones
+ * 
+ */
+const suggestTabs = async (query) => {
+    const suggestingList = [];
+    const tabs = await browser.tabs.query({});
+
+    tabs.forEach((tab) => {
+        if (tab.title && tab.title.toLowerCase().startsWith(query.toLowerCase())) {
+            const span = document.createElement('span');
+            span.classList.add('tab-results');
+
+
+            if (suggestingList.length === activeIdx) {
+                span.classList.add('active');
+            }
+
+            const a = document.createElement('a');
+            a.textContent = tab.title;
+            span.appendChild(a);
+
+
+            const icon = document.createElement('img');
+            icon.src = tab.favIconUrl;
+            span.prepend(icon);
+
+            suggestions.appendChild(span);
+
+            suggestingList.push('@' + tab.id);
         }
     });
 
@@ -201,7 +240,7 @@ const logCaret = async (click) => {
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 isNavigatingSuggestions = true;
-                activeIdx = (activeIdx + 1) % suggesting.length;
+                activeIdx = (activeIdx - 1 + suggesting.length) % suggesting.length;
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 isNavigatingSuggestions = true;
@@ -223,3 +262,5 @@ const logCaret = async (click) => {
 
 textarea.addEventListener('keyup', () => logCaret());
 textarea.addEventListener('click', () => logCaret(true));
+
+
