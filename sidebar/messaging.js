@@ -19,11 +19,14 @@ const highlightSkills = async (root) => {
         if (skill === 'undefined') {
             continue;
         }
-        const regex = new RegExp(`^\\/(${skill})\\b`, 'i');
-        if (regex.test(root.textContent)) {
-            highlight(root, '/' + skill);
-        }
+        
+        highlight(root, '/' + skill);
     }
+}
+
+const getSuggestions = (selection) => {
+    const range = selection.getRangeAt(0);
+    console.log(range.startContainer);
 }
 
 
@@ -34,6 +37,13 @@ textarea.oninput = (event) => {
     sanitizeHtml(div);
 
     highlightSkills(div)
+
+    // highlight(div, 'test')
+
+    const selection = window.getSelection();
+    if (selection.isCollapsed) {
+        getSuggestions(selection);
+    }
 
     // Update send button state based
     const promptValue = div.textContent || '';
