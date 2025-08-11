@@ -47,11 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Shift + Enter = line break
-// Enter = send
+// Enter = send (unless suggestions are active)
 textarea.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        sendBtn.click();
+        // Check if suggestions are active - if so, let messaging.js handle it
+        const suggestions = document.querySelector('.suggestions');
+        const hasActiveSuggestion = suggestions && suggestions.querySelector('.active');
+        
+        if (!hasActiveSuggestion) {
+            event.preventDefault();
+            sendBtn.click();
+        }
+        // If there are active suggestions, don't prevent default - let messaging.js handle it
     }
 });
 

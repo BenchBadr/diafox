@@ -13,17 +13,15 @@ function sanitizeHtml(div) {
     });
 }
 
-const highlightSkills = async (root) => {
+const highlightAll = async (root) => {
     const skills = await getCookie('skills');
     const skillsNames = Object.keys(skills)
+    const prefixedSkills = skillsNames.map(skill => '/' + skill);
 
-    for (const skill of skillsNames) {
-        if (skill === 'undefined') {
-            continue;
-        }
+    const allHighlights = [...prefixedSkills];
+
         
-        highlight(root, '/' + skill);
-    }
+    highlight(root, allHighlights);
 }
 
 
@@ -82,9 +80,7 @@ textarea.oninput = (event) => {
 
     sanitizeHtml(div);
 
-    highlightSkills(div)
-
-    // highlight(div, 'test')
+    highlightAll(div)
 
 
     // Update send button state based
