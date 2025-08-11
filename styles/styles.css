@@ -98,6 +98,8 @@ textarea, #prompt {
   background: transparent;
   color:var(--text);
   overflow:hidden;
+
+  white-space: pre-wrap;
 }
 
 
@@ -537,6 +539,7 @@ mark {
     padding:5px 5px;
     display: block;
     user-select: none;
+    cursor:pointer;
     overflow: scroll;
     overflow: hidden;
 

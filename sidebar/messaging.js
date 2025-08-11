@@ -3,6 +3,11 @@ import { highlight } from './highlight.js';
 
 const suggestions = document.querySelector('.suggestions');
 
+suggestions.addEventListener('click', (e) => {
+    e.stopPropagation();
+    console.log('damn click')
+});
+
 
 /* Global variables */
 let suggesting = 0;
@@ -51,7 +56,7 @@ const getSuggestions = async (selection) => {
     let suggestingList = [];
     
     if (command.startsWith('/')) {
-        suggestingList = suggestSkills(command.slice(1));
+        suggestingList = await suggestSkills(command.slice(1));
     }
     
     return suggestingList;
@@ -81,18 +86,28 @@ const suggestSkills = async (query) => {
 
     const suggestingList = [];
 
-    skillsNames.forEach((skill, index) => {
+    skillsNames.forEach((skill) => {
         if (skill === 'undefined') return;
 
         if (skill.startsWith(query)) {
             const span = document.createElement('span');
             span.classList.add('res-skill');
-            if (index === activeIdx) {
+            if (suggestingList.length === activeIdx) {
                 span.classList.add('active');
             }
 
             span.textContent = skill;
             suggestions.appendChild(span);
+            span.onclick = (e) => {
+                console.log('CLIIIIICK')
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(skill);
+
+                activeIdx = suggestingList.length;
+                
+                insertSuggestion();
+            };
 
             suggestingList.push('/' + skill);
         }
@@ -103,6 +118,7 @@ const suggestSkills = async (query) => {
 
 /**
  * Inserts the currently active suggestion into the textarea at the caret position.
+ * - Ads a spce after the insertion
  */
 const insertSuggestion = () => {
     if (!suggesting || !suggesting.length) return;
@@ -114,29 +130,34 @@ const insertSuggestion = () => {
     const textNode = range.startContainer;
     const offset = range.startOffset;
 
-    // Find the start of the command (e.g., "/ski")
     const text = textNode.textContent;
     const beforeCaret = text.slice(0, offset);
-    const afterCaret = text.slice(offset);
+    const afterCaret = ' ' + text.slice(offset);
     const lastSpaceIdx = beforeCaret.lastIndexOf(' ');
     const commandStart = lastSpaceIdx === -1 ? 0 : lastSpaceIdx + 1;
 
-    // Replace the command with the selected suggestion
+    const inserted = suggesting[activeIdx];
     const newText =
         beforeCaret.slice(0, commandStart) +
-        suggesting[activeIdx] +
+        inserted +
         afterCaret;
 
-    // Update the text node and set caret after inserted suggestion
     textNode.textContent = newText;
-    const newOffset = commandStart + suggesting[activeIdx].length;
+    const newOffset = commandStart + inserted.length + 1;
 
-    // Move caret to the end of the inserted suggestion
     const newRange = document.createRange();
     newRange.setStart(textNode, newOffset);
     newRange.collapse(true);
     selection.removeAllRanges();
     selection.addRange(newRange);
+
+    // Clear suggestions
+    suggesting = 0;
+    isNavigatingSuggestions = false;
+    activeIdx = 0;
+
+    // re-highlight
+    highlightAll(textarea);
 };
 
 
@@ -164,12 +185,12 @@ const logCaret = async (click) => {
         suggesting = [];
         isNavigatingSuggestions = false;
     }
+
     // rerender suggestions
     if (!isNavigatingSuggestions) {
         const selection = window.getSelection();
         if (selection.isCollapsed) {
             suggesting = await getSuggestions(selection);
-            // isNavigatingSuggestions = true;
         }
     } else {
         updateActiveSuggestion();
@@ -188,8 +209,6 @@ const logCaret = async (click) => {
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 insertSuggestion();
-                highlightAll(textarea);
-                activeIdx = 0;
             } else {
                 isNavigatingSuggestions = false;
                 activeIdx = 0;
