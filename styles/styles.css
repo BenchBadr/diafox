@@ -67,6 +67,7 @@ img.blob{
 .prompt-wrap{
     background:var(--high-bg);
     border-radius: 1rem;
+    backdrop-filter:blur(15px);
 }
 
 
@@ -90,7 +91,7 @@ img.blob{
   overflow: hidden;
 }
 
-textarea {
+textarea, #prompt {
   outline: none;
   border: none;
   resize: none;
@@ -99,7 +100,6 @@ textarea {
   background: transparent;
   color:var(--text);
   overflow:hidden;
-    
 }
 
 
@@ -382,7 +382,7 @@ textarea {
   cursor:pointer;
 }
 
-.prompt-wrap textarea{
+.prompt-wrap #prompt{
   padding:1rem;
   overflow:scroll;
   width:calc(100% - 2rem);
@@ -475,4 +475,25 @@ textarea {
   max-width: 70%;
   margin: 5px 0 5px auto;
   white-space: pre-wrap;
+  overflow:scroll;
+  overflow: hidden;
+}
+
+
+#prompt {
+  max-height:20vh;
+}
+
+[contenteditable][data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-op);
+  pointer-events: none;
+  cursor: text;
+  display: block;
+}
+
+.highlight {
+  color:var(--accent);
+  font-weight: bold;
+  user-select: none;
 }

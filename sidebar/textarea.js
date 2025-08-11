@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hiddenDiv.style.visibility = 'hidden';
     hiddenDiv.style.whiteSpace = 'pre';
     hiddenDiv.style.font = window.getComputedStyle(textarea).font;
-    hiddenDiv.textContent = textarea.value;
+    hiddenDiv.textContent = textarea.textContent || '';
     document.body.appendChild(hiddenDiv);
     
     const textWidth = hiddenDiv.clientWidth;
@@ -25,9 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.removeChild(hiddenDiv);
     
     const shouldBeWide = 
-      textWidth > textareaWidth - 2.5 * fontSize || 
-      textarea.value.includes('\n') ||
-      textareaWidth < 200;
+      textareaWidth < 200 || textWidth > textareaWidth - 2.5 * fontSize || 
+      textarea.innerHTML && textarea.innerHTML.includes('<br>')
       
     promptWrap.classList.toggle('wide', shouldBeWide);
   }
@@ -46,17 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Auto add / remove empty class to send btn
-// (kind of a disabled effect)
-textarea.oninput = (event) => {
-    const promptValue = event.target.value;
-    if (promptValue.length) {
-        sendBtn.classList.remove('empty');
-    } else {
-        sendBtn.classList.add('empty');
-    }
-};
-
 
 // Shift + Enter = line break
 // Enter = send
@@ -66,3 +54,24 @@ textarea.addEventListener('keydown', (event) => {
         sendBtn.click();
     }
 });
+
+
+// Mimic textarea
+// Although it's div[contenteditable]
+textarea.addEventListener('paste', (event) => {
+    event.preventDefault();
+    let text = (event.clipboardData || window.clipboardData).getData('text');
+    text = text.replace(/\r\n?/g, '\n').replace(/\n/g, '<br>');
+    document.execCommand('insertHTML', false, text);
+});
+
+
+/*
+=================
+
+FLOATING MENUS
+
+=================
+
+*/
+
