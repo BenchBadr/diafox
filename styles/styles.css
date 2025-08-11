@@ -87,6 +87,7 @@ img.blob{
   border:1px solid var(--text-op);
 
   overflow: hidden;
+
 }
 
 textarea, #prompt {
@@ -401,7 +402,7 @@ textarea, #prompt {
   width:100%;
 }
 
-.prompt-wrap.wide {
+.prompt-wrap.wide, .prompt-wrap:has(.ctx-card){
   display: block;
 
   .toolbox{
@@ -592,5 +593,73 @@ span.tab-results {
     text-overflow: ellipsis;
 
     max-width: 100%;
+  }
+}
+
+.ctx-cards {
+  display: block;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:has(.ctx-card){
+    padding: 15px;
+  }
+}
+
+.ctx-card{
+  height:40px;
+  width:150px;
+  background:var(--text-op);
+  border-radius: 1rem;
+  cursor:pointer;
+  overflow: scroll;
+  padding:8px;
+  overflow:hidden;
+  display: inline-flex;
+  margin-right:10px;
+
+  img {
+    display: block;
+    height: 100%;
+    width: 16px;
+    margin: auto 0;
+    background: var(--bg);
+    border-radius: 8px;
+    object-fit: contain;
+    align-self: center;
+    padding:0 10px;
+  }
+
+  div {
+    margin-top:auto;
+    margin-bottom:auto;
+    width:100%;
+    padding-left:5px;
+    gap:5px;
+
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  a, span {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size:90%;
+  }
+
+  a {
+    color:var(--current-op-50);
+    font-size: 80%;
+    font-weight: 500;
+    margin-top:5px;
   }
 }

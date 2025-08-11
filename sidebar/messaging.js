@@ -2,6 +2,9 @@ import { highlight } from './highlight.js';
 
 
 const suggestions = document.querySelector('.suggestions');
+const textarea = document.getElementById('prompt');
+const promptWrap = document.querySelector('.prompt-wrap');
+const sendBtn = promptWrap.querySelector('.send-btn');
 
 
 /* Global variables */

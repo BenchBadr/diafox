@@ -1,3 +1,54 @@
+
+/** Get {favicon, title, url} based on tab ID
+ * 
+ * @param {string} tabId 
+ * @returns {json}
+ */
+async function getTabInfo(tabId) {
+  const tab = await browser.tabs.get(Number(tabId));
+  return {
+    faviconUrl: tab.favIconUrl || null,
+    title: tab.title || '',
+    url: tab.url.split('://')[1] || ''
+  };
+}
+
+
+/**
+ * Add context card
+ */
+const addCtxCard = async (id) => {
+    const containerCtx = document.querySelector('.ctx-cards');
+
+    const data = await getTabInfo(id);
+
+    const card = document.createElement('div');
+
+    const img = document.createElement('img');
+    img.src = data.faviconUrl;
+
+    img.classList.add('ctx-favicon');
+    card.appendChild(img);
+
+    const wrapText = document.createElement('div');
+
+
+    const span = document.createElement('span');
+    span.textContent = data.title;
+    wrapText.append(span);
+
+    const a = document.createElement('a');
+    a.textContent = data.url;
+    wrapText.append(a);
+
+    card.append(wrapText);
+
+    card.classList.add('ctx-card');
+    containerCtx.prepend(card);
+}
+
+
+
 /**
  * Highlight functionality for a contenteditable div
  * @param {HTMLElement} root - The contenteditable div
@@ -49,6 +100,24 @@ export function highlight(div, queries) {
                         nodeStack.push(node.childNodes[i]);
                     }
                 }
+            }
+        }
+
+
+        // Take care of ctxCards only for queries that are actually in the text
+        // destroy to avoid @5 to match becauseof @59
+        // already reversed big numbers first so it works
+        const containerCtx = document.querySelector('.ctx-cards');
+        let toDestroy = div.textContent;
+        containerCtx.innerHTML = '';
+        for (const query of queries) {
+            if (query.startsWith('@')) {
+            const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+            const match = regex.exec(toDestroy);
+            if (match) {
+                addCtxCard(query.slice(1));
+                toDestroy = toDestroy.slice(0, match.index) + toDestroy.slice(match.index + match[0].length);
+            }
             }
         }
     }
