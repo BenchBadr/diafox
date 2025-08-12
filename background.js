@@ -1,13 +1,15 @@
-browser.runtime.onMessage.addListener(async (msg, sender) => {
-  if (msg.action === "inject" && msg.tabId) {
+
+browser.runtime.onMessage.addListener(async (message, sender) => {
+  if (message.type === "getTabContent" && message.tabId) {
     try {
-      await browser.scripting.executeScript({
-        target: { tabId: msg.tabId },
-        func: () => alert('Hello from extension!')
+      const [{ result }] = await browser.scripting.executeScript({
+        target: { tabId: message.tabId },
+        func: () => document.documentElement.innerText,
       });
-      return { success: true };
-    } catch (e) {
-      return { success: false, error: e.message };
+      return { text: result };
+    } catch (err) {
+      console.error("Error getting tab content:", err);
+      return { html: null, error: err.message };
     }
   }
 });

@@ -6,10 +6,20 @@ const sendAnswer = async (ctxIds) => {
         const newDiv = document.createElement('div');
         newDiv.className = 'markdown-body';
 
-         await browser.runtime.sendMessage({ action: "inject", tabId: Number(ctxIds[0]) });
+        const response = await browser.runtime.sendMessage({
+    type: "getTabContent",
+    tabId: Number(ctxIds[0])
+  });
+  if (response && response.text) {
+    const text = response.text;
+    console.log(text, text.length)
+  } else {
+    console.error("No response or missing html property");
+  }
+
 
         newDiv.innerHTML = markdown(`
-# Well...
+# Well... $5x$
             `);
         msgs.appendChild(newDiv);
         msgs.style.paddingBottom = 
