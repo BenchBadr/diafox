@@ -26,6 +26,8 @@
   --accent-red:#cc4a55;
   --accent-orange:#c95125;
 
+	--green:#00CBA9;
+
   --accent:var(--accent-white);
 
   --accent-op-10: color-mix(in srgb, var(--accent) 10%, transparent 90%);
@@ -354,7 +356,7 @@ textarea, #prompt {
   width:1.6em;
   height:1.6em;
 
-  color:black;
+  color:var(--bg);
 
   &:not(.running)::after{
     content:'arrow_upward';
@@ -418,55 +420,6 @@ textarea, #prompt {
   }
 }
 
-
-.assist {
-  --dim: 30px;
-  --pad: 8px;
-
-  font-family: Material Icons;
-  border: 1px solid var(--text-op-low);
-  height: var(--dim);
-  width: var(--dim);
-  border-radius: 50%;
-  box-sizing: border-box;
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition-duration:.2s;
-  cursor:pointer;
-
-  &:hover{
-    transform:scale(1.1);
-
-    &::after{
-      animation: rotate-border 2s linear infinite;
-    }
-  }
-}
-
-.assist::after {
-  content: "";
-  
-  height:calc(var(--dim) - var(--pad));
-  width:calc(var(--dim) - var(--pad));
-
-  border: 2px dotted var(--text-op);
-  border-radius: 50%;
-  box-sizing: border-box;
-  pointer-events: none;
-
-  animation: rotate-border 3s linear infinite;
-}
-
-@keyframes rotate-border {
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 
 
@@ -859,7 +812,7 @@ mjx-container {
 
   position: relative;
   z-index:15;
-  background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
+  background: linear-gradient(var(--accent-op-30), var(--accent-op-20));
   padding: 8px 15px;
   border-radius: 1rem;
   display: block;
@@ -884,4 +837,148 @@ mjx-container {
     opacity:1;
     transform: translateY(0) scale(1);
   }
+}
+
+
+.task-container:not(.done) .loading-text {
+  display: inline;
+  background: linear-gradient(90deg, var(--text-op) 0%, var(--text-op-high) 50%, var(--text-op) 100%);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+  user-select: none;
+
+  white-space: nowrap;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position-x: -200%;
+  }
+  100% {
+    background-position-x: 200%;
+  }
+}
+
+.task-container.done .loading-text{
+  display: inline;
+  color:var(--text-op);
+  user-select: none;
+
+  white-space: nowrap; 
+
+  display: flex;
+  align-items: center;
+
+  &::before{
+    font-family: Material Icons;
+    content:'check';
+    color:var(--green);
+    margin-right:.5em;
+  }
+
+}
+
+.task-container.done.fail .loading-text::before{
+  content:'close';
+  color:var(--accent-red);
+}
+
+
+
+.assist {
+  --dim: 30px;
+  --pad: 8px;
+
+  color:var(--text-op);
+
+  font-family: Material Icons;
+  border: 1px solid var(--current-op-30);
+  height: var(--dim);
+  width: var(--dim);
+  border-radius: 50%;
+  box-sizing: border-box;
+
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition-duration:.2s;
+  cursor:pointer;
+
+  &:hover{
+    transform:scale(1.1);
+    background:var(--current-op-30);
+
+    &::after{
+      animation: rotate-border 2s linear infinite;
+    }
+  }
+}
+
+.assist::after {
+  content: "";
+  
+  height:calc(var(--dim) - var(--pad));
+  width:calc(var(--dim) - var(--pad));
+
+  border: 2px dotted var(--text-op);
+  border-radius: 50%;
+  box-sizing: border-box;
+  pointer-events: none;
+
+  animation: rotate-border 3s linear infinite;
+}
+
+@keyframes rotate-border {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.done .assist{
+  animation: none !important;
+  display:flex;
+
+  &::after {
+    animation: none !important;
+  }
+
+  &::after{
+
+    align-self: center;
+    color:var(--text-op-high);
+    font-size: calc(var(--pad) * 1.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: Material Icons;
+    content:'bolt';
+
+    padding:calc(var(--dim)  - 2.8 * var(--pad)) !important;
+  }
+}
+
+.task-container{
+  --icon:'ads_click';
+
+  display: flex;
+  align-items: center;
+  gap:.5em;
+
+
+  padding:5px;
+
+ -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+  mask-image: linear-gradient(to right, black 80%, transparent 100%);
+  overflow: hidden;
 }

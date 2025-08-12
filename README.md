@@ -42,7 +42,7 @@ Below a check-list of the development progress.
 ## 3. Functionnalities
 
 - [x] @mention tabs to add context
-- [ ] Chat with Youtube
+- [x] Get Youtube transcripts
 - [ ] Chat with PDFs
 - [ ] Model switcher
 - [ ] Agentic capabilities (Tool-calling)
