@@ -16,7 +16,8 @@
         "default_panel": "sidebar/panel.html"
     },
 
-    "permissions": ["storage", "tabs", "cookies", "theme"],
+    "permissions": ["storage", "tabs", "cookies", "theme", "scripting", "activeTab"],
+    "host_permissions" : ["<all_urls>"],
 
     "commands": {
     "_execute_sidebar_action": {
@@ -33,6 +34,10 @@
     },
     "default_title": "DiaFox Settings",
     "default_popup": "popup/settings.html"
+  },
+
+  "background": {
+    "scripts": ["background.js"]
   }
 
 }

@@ -117,9 +117,11 @@ function sendMsg(content) {
     const ctxCardIds = Array.from(ctxClone.querySelectorAll('.ctx-card'))
         .map(card => card.getAttribute('data-id'));
 
-    sendAnswer(ctxCardIds).finally(() => {
-        sendBtn.classList.remove('running');
-    });
+    sendAnswer(ctxCardIds)
+    
+    //.finally(() => {
+    //    sendBtn.classList.remove('running');
+    //});
 }
 
 document.querySelector('.send-btn').onclick = function() {
@@ -148,3 +150,5 @@ export const textareaRemove = (query) => {
     textarea.textContent = textarea.textContent.replaceAll(query, '');
     highlightAll(textarea);
 }
+
+
