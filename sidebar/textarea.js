@@ -89,48 +89,37 @@ function sendMsg(content) {
         child.style.setProperty('--idx', idx);
     });
 
-    document.querySelector('.msgs').appendChild(ctxClone)
-    document.querySelector('.msgs').appendChild(msgDiv);
+    const msgs = document.querySelector('.msgs');
 
-    // Markdown showcase
-    const showcase = `
-# Markdown Showcase
 
-## Code Block
+    msgs.appendChild(ctxClone)
+    msgs.appendChild(msgDiv);
 
-\`\`\`javascript
-function helloWorld() {
-    console.log("Hello, world!");
-}
-\`\`\`
 
-## LaTeX
+    // auto scroll to active msg
+    const ctxCloneRect = ctxClone.getBoundingClientRect();
+    const msgDivRect = msgDiv.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const paddingBottom = Math.max(
+        0,
+        viewportHeight - 32 - (ctxCloneRect.height + msgDivRect.height)
+    );
+    msgs.style.paddingBottom = `${paddingBottom}px`;
+    msgs.scrollTo({
+        top: msgs.scrollHeight,
+        behavior: 'smooth'
+    });
 
-Inline math: $E = mc^2$
 
-Block math:
-$$
-\\int_{a}^{b} x^2 dx = \\frac{b^3 - a^3}{3}
-$$
+    sendBtn.classList.add('running');
 
-## Table
 
-| Name   | Age | City      |
-|--------|-----|-----------|
-| Alice  | 24  | New York  |
-| Bob    | 29  | London    |
-| Carol  | 31  | Paris     |
+    const ctxCardIds = Array.from(ctxClone.querySelectorAll('.ctx-card'))
+        .map(card => card.getAttribute('data-id'));
 
-## Blockquote
-
-> This is a blockquote example.
-
-## Inline code
-
-\`python\` est un langage de *programmation*
-    `;
-
-    sendAnswer(showcase);
+    sendAnswer(ctxCardIds).finally(() => {
+        sendBtn.classList.remove('running');
+    });
 }
 
 document.querySelector('.send-btn').onclick = function() {

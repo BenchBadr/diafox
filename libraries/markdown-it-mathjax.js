@@ -41,3 +41,4 @@ function markdownitMathjax(md) {
   md.renderer.rules.math_inline = (tokens, idx) => `\\(${tokens[idx].content}\\)`;
   md.renderer.rules.math_block = (tokens, idx) => `\\[${tokens[idx].content}\\]`;
 }
+

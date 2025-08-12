@@ -356,7 +356,15 @@ textarea, #prompt {
 
   color:black;
 
-  &.empty{
+  &:not(.running)::after{
+    content:'arrow_upward';
+  }
+
+  &.running::after{
+    content:'stop';
+  }
+
+  &:not(.running).empty{
     opacity:.8;
     background:var(--text-op);
     color:var(--text-op);
@@ -490,41 +498,6 @@ mark {
   justify-content: center;
   padding:0 1rem;
 }
-
-.msgs {
-  height:calc(70vh - 2em);
-  padding-bottom:30vh;
-  overflow:scroll;
-  width:100%;
-}
-
-.msg-user {
-  position: relative;
-  background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
-  padding: 8px 15px;
-  border-radius: 1rem;
-  display: block;
-  width: fit-content;
-  max-width: 70%;
-  margin: 5px 0 5px auto;
-  white-space: pre-wrap;
-  overflow: scroll;
-  overflow: hidden;
-
-  animation: msgUserAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes msgUserAppear {
-  from {
-    opacity:0;
-    transform: translateY(100vh) scale(3);
-  }
-  to {
-    opacity:1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 
 .suggestions{
   background:var(--high-bg);
@@ -807,11 +780,55 @@ mjx-container {
     color:var(--current-op-50);
   }
 
-  pre > code * {
-    font-size: 10px;
+  pre > code > span, pre > code {
+    font-size:12px !important;
   }
 
-  pre > code{
-    line-height: .2;
+  pre:has(code) {
+    background:transparent !important;
+  }
+}
+
+
+.msgs {
+  height: calc(100vh - 2em);
+  padding-bottom: 30vh;
+
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow:scroll;
+  width:100%;
+
+}
+
+.msg-user {
+  --temp-mag:0;
+
+  position: relative;
+  background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
+  padding: 8px 15px;
+  border-radius: 1rem;
+  display: block;
+  width: fit-content;
+  max-width: 70%;
+  margin: 5px 0 5px auto;
+  white-space: pre-wrap;
+  overflow: scroll;
+  overflow: hidden;
+
+  margin-bottom:var(--temp-mag);
+
+  animation: msgUserAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes msgUserAppear {
+  from {
+    opacity:0;
+    transform: translateY(100vh) scale(3);
+  }
+  to {
+    opacity:1;
+    transform: translateY(0) scale(1);
   }
 }

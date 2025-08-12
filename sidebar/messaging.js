@@ -277,7 +277,9 @@ const logCaret = async (click) => {
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 insertSuggestion();
-            } 
+            } else {
+                isNavigatingSuggestions = false;
+            }
         };
         
         // Store reference to the handler for proper cleanup
