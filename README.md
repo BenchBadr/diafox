@@ -17,7 +17,7 @@ AI features be in all browsers and DiaFox is meant to bring these beloved featur
 Below a check-list of the development progress.
 
 
-# Check-list
+# I. Check-list
 
 
 
@@ -54,14 +54,16 @@ Below a check-list of the development progress.
 - [ ] Use local inferences with ollama
 
 
-# Agentic capabilities
+# II. Agentic capabilities
 
+
+## 1. The "Thinking" mode
 
 For each context that you attach (tabs), the tasks are splitted into multiple inferences which each inference being specialized into the tabs its given. 
 
 Let's say... you attached three tabs. No matter how long is the context, the main inference will not read them but outsource to other agents as length of tab content can be increasingly long.
 
-To put it in a nutshell, the model you're chatting with will chat with the tabs to receive the relevant informations, this could be compared as an aggressive form of chunking.
+In other words, the model you're chatting with will chat with the tabs to receive the relevant informations, this could be compared as an aggressive form of chunking.
 
 Inferences will only interact in the thinking step as the main inference identifies the needs and delegates in the thinking task.
 
@@ -74,6 +76,26 @@ graph TD;
     A <--> D["Docs"]
 ```
 
+## 2. Interactions between inferences - *Self-brainstorming*
+
+> This is an in-progress section
+
+Maybe you attached a bunch of tabs but none of them are required to answer. If you ask the main inference "Hello, how are you?" there is no need to look up for informations.
+
+The main inference is provided with the names of the tabs it has access to and their respective identifier (tab id according to `browser.tabs`). If tab 28 is a YouTube video called "Where is the tomb of Alexander the Great ? | Youtube" and the user asks something related to the tomb then main inference will send a message as following:
+- #28 Informations about the tomb of Alexander Great
+
+Because of the answer starting with #, this will not mark answering state as finished, rather toggle the thinking state (visually as well). The client, receiving this answer will not only toggle the thinking mode but also send the prompt agent associated to the tab (which will already know how to compose answer, with some particularities like YouTube having special instruction to try and quote to the maximum and reference timestamp).
+
+Answer of the agent will be sent as "user" and main inference can ask other questions, to this agents or others.
+
+As soon as the first message not starting with `#` is sent, thinking mode is exited and the AI starts answering. 
+
+> One difficulty I may encounter is handling these answer specifics with `stream` enabled...
+
+
 # Status
 
 *In early development*
+
+

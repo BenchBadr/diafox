@@ -840,7 +840,7 @@ mjx-container {
 }
 
 
-.task-container:not(.done) .loading-text {
+.task-container:not(.done) .loading-text, .thinking label {
   display: inline;
   background: linear-gradient(90deg, var(--text-op) 0%, var(--text-op-high) 50%, var(--text-op) 100%);
   background-size: 200% 100%;
@@ -981,4 +981,41 @@ mjx-container {
  -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
   mask-image: linear-gradient(to right, black 80%, transparent 100%);
   overflow: hidden;
+}
+
+
+.thinking input[type="checkbox"] {
+  display: none;
+}
+
+.thinking .think-content {
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease;
+  color:var(--text-op);
+  border-left:2px solid var(--text-op);
+  padding: 5px;
+  margin:5px;
+}
+
+.thinking label:has(input[type="checkbox"]:checked) + .think-content {
+  max-height: 500px;
+  display: block;
+}
+
+.thinking label::before{
+  font-family: Material Icons;
+  content:'chevron_right';
+  color:var(--text-op);
+}
+
+.thinking label:has(input[type="checkbox"]:checked) {
+  color:red !important;
+}
+
+.thinking label{
+  display: flex;
+  align-items: center;
+  cursor:pointer;
 }
