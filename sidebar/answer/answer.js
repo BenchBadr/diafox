@@ -20,7 +20,7 @@ then
 And
 
 ~~~
-basic text "hello"
+basic text "hello" basic text "hello" basic text "hello" basic text "hello" basic text "hello" basic text "hello"
 ~~~
 
 Finally \`python\`

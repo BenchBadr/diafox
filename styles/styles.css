@@ -785,7 +785,34 @@ mjx-container {
   }
 
   pre:has(code) {
+
+  }
+
+  pre pre {
     background:transparent !important;
+    background:var(--bg) !important;
+    padding:5px;
+    border-radius: 0 0 10px 10px;
+    overflow:scroll;
+    box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.08);
+  }
+
+  .codeblock-bar {
+    background:var(--high-bg);
+    margin-bottom:-5px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:var(--current-op-50);
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    gap:1em;
+    padding:5px;
+    border-radius: 10px 10px 0 0;
+
+    &::before{
+      font-family: Material Icons;
+      content:'terminal'
+    }
   }
 }
 
@@ -806,6 +833,7 @@ mjx-container {
   --temp-mag:0;
 
   position: relative;
+  z-index:15;
   background: linear-gradient(var(--accent-op-50), var(--accent-op-30));
   padding: 8px 15px;
   border-radius: 1rem;

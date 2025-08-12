@@ -1,16 +1,14 @@
 
 const md = window.markdownit({
-  highlight: function (code, lang) {
-    if (lang && Prism.languages[lang]) {
-      // Highlight code with Prism and wrap in <pre><code>
-      return `<pre class="language-${lang}"><code class="language-${lang}">` +
-        Prism.highlight(code, Prism.languages[lang], lang) +
+    highlight: function (code, lang) {
+        const langAlt = lang && Prism.languages[lang] ? lang : 'text';
+
+
+        return `<div class='codeblock-bar'>Code • ${langAlt}</div>` + 
+        `<pre class="language-${langAlt}"><code class="language-${langAlt}">` +
+        Prism.highlight(code, Prism.languages[langAlt], langAlt) +
         `</code></pre>`;
-    } else {
-      // Use plain escaped code if no language specified
-      return `<pre><code>` + md.utils.escapeHtml(code) + `</code></pre>`;
     }
-  }
 }).use(markdownitMathjax);;
 
 function markdown(text) {
