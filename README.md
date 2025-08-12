@@ -94,8 +94,15 @@ As soon as the first message not starting with `#` is sent, thinking mode is exi
 > One difficulty I may encounter is handling these answer specifics with `stream` enabled...
 
 
-# Status
+# III. Pictures previews
 
-*In early development*
+What is it | Light mode | Dark Mode |
+| - | - | - |
+Appearance editor| <img src=assets/image.png> | <img src=assets/image2.png>
+Tabs mentionned | <img src=assets/image3.png> |  <img src=assets/image4.png>
+Tabs selector | <img src=assets/image5.png> | <img src=assets/image7.png>
+Skill selector | <img src=assets/image6.png> |  <img src=assets/image8.png> 
 
+# IV. What's the finality?
 
+AI tools private, powerful and accessible for everyone.
