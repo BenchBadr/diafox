@@ -3,9 +3,9 @@ const md = window.markdownit({
     highlight: function (code, lang) {
         const langAlt = lang && Prism.languages[lang] ? lang : 'text';
 
-
-        return `<div class='codeblock-bar'>Code • ${langAlt}</div>` + 
-        `<pre class="language-${langAlt}"><code class="language-${langAlt}">` +
+        return `<div class='codeblock-bar'>Code • ${langAlt}` + 
+        `<div class='cb-copy'></div>` + 
+        `</div><pre class="language-${langAlt}"><code class="language-${langAlt}">` +
         Prism.highlight(code, Prism.languages[langAlt], langAlt) +
         `</code></pre>`;
     }
@@ -17,4 +17,3 @@ function markdown(text) {
 
 export { markdown };
 
-MathJax.typesetPromise();

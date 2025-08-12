@@ -767,7 +767,9 @@ mjx-container {
 
   :not(pre) > code {
     background:var(--high-bg);
-    border:1px solid var(--current-op-30);
+    border:1px solid var(--current-op-10);
+    color:var(--current-op-40);
+    font-size: 90%;
     border-radius: 3px;
     padding:1px 1px;
   }
@@ -813,6 +815,29 @@ mjx-container {
       font-family: Material Icons;
       content:'terminal'
     }
+  }
+
+}
+
+.cb-copy {
+  cursor: pointer;
+  color: var(--text);
+  margin-left: auto;
+  --cb-copy-icon: 'content_copy';
+  transition: .2s;
+
+  &::before {
+    font-family: Material Icons;
+    content: var(--cb-copy-icon);
+  }
+
+  &:active{
+    transform:scale(0.8);
+  }
+
+  &.active::before {
+    --cb-copy-icon: 'check';
+    color: var(--accent-green);
   }
 }
 
