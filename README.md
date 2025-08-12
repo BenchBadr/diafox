@@ -53,6 +53,27 @@ Below a check-list of the development progress.
 - [ ] Use session token of AI chat services to retrieve answer
 - [ ] Use local inferences with ollama
 
+
+# Agentic capabilities
+
+
+For each context that you attach (tabs), the tasks are splitted into multiple inferences which each inference being specialized into the tabs its given. 
+
+Let's say... you attached three tabs. No matter how long is the context, the main inference will not read them but outsource to other agents as length of tab content can be increasingly long.
+
+To put it in a nutshell, the model you're chatting with will chat with the tabs to receive the relevant informations, this could be compared as an aggressive form of chunking.
+
+Inferences will only interact in the thinking step as the main inference identifies the needs and delegates in the thinking task.
+
+This delegation itself is done with some tool-calling techniques.
+
+```mermaid
+graph TD;
+    A["Main Inference"] <--> B["YouTube"]
+    A <--> C["Wikipedia"]
+    A <--> D["Docs"]
+```
+
 # Status
 
 *In early development*

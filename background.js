@@ -1,4 +1,3 @@
-
 browser.runtime.onMessage.addListener(async (message, sender) => {
   if (message.type === "getTabContent" && message.tabId) {
     try {
@@ -9,7 +8,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
             const [{ result }] = await browser.scripting.executeScript({
                 target: { tabId: message.tabId },
                 func: () => {
-                    // Custom logic for YouTube
+                    // Artifically open transcripts
                     document.querySelector("#primary-button .ytd-video-description-transcript-section-renderer .yt-spec-button-shape-next--outline .yt-spec-touch-feedback-shape__fill").click() 
                     return new Promise(resolve => {
                         setTimeout(() => {
@@ -20,8 +19,11 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
                 },
             });
             return { text: result };
-
-
+        
+        // PDF Handling
+        } else if (tab.url.endsWith('.pdf')) {
+            //  document.querySelector('.pdfViewer').textContent 
+            return { text: null };
         // Regular scrape
         } else {
             const [{ result }] = await browser.scripting.executeScript({
