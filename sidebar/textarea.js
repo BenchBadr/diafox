@@ -71,7 +71,7 @@ textarea.addEventListener('paste', (event) => {
 });
 
 
-function sendMsg(content) {
+async function sendMsg(content) {
     textarea.setAttribute('data-placeholder', 'Ask another question...');
 
     const msgDiv = document.createElement('div');
@@ -117,17 +117,14 @@ function sendMsg(content) {
     const ctxCardIds = Array.from(ctxClone.querySelectorAll('.ctx-card'))
         .map(card => card.getAttribute('data-id'));
 
-    sendAnswer(ctxCardIds, textarea.innerText);
-    
-    //.finally(() => {
-    //    sendBtn.classList.remove('running');
-    //});
-}
+    await sendAnswer(ctxCardIds, textarea.innerText);
+    sendBtn.classList.remove('running');
 
-document.querySelector('.send-btn').onclick = function() {
+}
+document.querySelector('.send-btn').onclick = async function() {
     const content = textarea.innerHTML || '';
     if (content.trim()) {
-        sendMsg(content);
+        await sendMsg(content);
         textarea.innerHTML = '';
         // Reset the empty state after clearing content
         sendBtn.classList.add('empty');

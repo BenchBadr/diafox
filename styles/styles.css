@@ -1061,7 +1061,7 @@ mjx-container {
 }
 
 .thinking label:has(input[type="checkbox"]:checked) + .think-content {
-  max-height:500px;
+  max-height: 200vh;
   padding: 0;
   padding-left:50px;
   filter:none;

@@ -30,9 +30,10 @@ Below a check-list of the development progress.
 - 1.1 Markdown
     - [x] Basic `markdown-it`
     - [x] LaTeX with MathJax
-    - [ ] CodeBlocks
-        - [ ] Rendering
-        - [ ] Toolbar with lang and copy btn
+    - [x] CodeBlocks
+        - [x] Rendering
+        - [x] Toolbar with lang and copy btn
+- [ ] Make stop button functionnal
 
 ## 2. Customization
 
@@ -46,10 +47,18 @@ Below a check-list of the development progress.
 - [x] Get Youtube transcripts
 - [ ] Chat with PDFs
 - [ ] Model switcher
-- [ ] Agentic capabilities (Tool-calling)
+- [ ] Retrieve skill instructions on demand
+- [ ] Load custom instructions in system prompt
 
+## 4. Agentic capabilities
 
-## 4. Distant future
+- [x] Create an expert for each tab
+- [x] "Pro" mode when context is needed (inspired by Perplexity)
+    - [x] Show logs of chat between main inference and experts
+- [ ] Perform web searches on its own
+- [ ] Operator to perform physical actions through tool calling
+
+## 5. Distant future
 
 - [ ] Use session token of AI chat services to retrieve answer
 - [ ] Use local inferences with ollama
@@ -94,6 +103,22 @@ As soon as the first message not starting with `#` is sent, thinking mode is exi
 
 > One difficulty I may encounter is handling these answer specifics with `stream` enabled...
 
+## 3. Update - it works
+
+## 1. YouTube example
+
+<img src="assets/youtube.png">
+
+### A little excerpt of the "Thinking process"
+
+<img src=assets/youtube2.png>
+
+## 2. Think wisely!
+
+<img src=assets/think.png>
+
+When answer is obvious using tabs titles or the main inference does not feel like there is need to get deeper: it will not. Which means: it will not initiate the experts but the text of the tabs is stored in case another question comes as a follow-up and requires deeper knowledge.
+
 
 # III. Pictures previews
 
@@ -104,6 +129,35 @@ Tabs mentionned | <img src=assets/image3.png> |  <img src=assets/image4.png>
 Tabs selector | <img src=assets/image5.png> | <img src=assets/image7.png>
 Skill selector | <img src=assets/image6.png> |  <img src=assets/image8.png> 
 
-# IV. What's the finality?
 
-AI tools private, powerful and accessible for everyone.
+
+# IV. Test it yourself!
+
+## 1. Installation
+
+```
+git clone https://github.com/BenchBadr/diafox
+```
+
+Then, on your browser, head to `aboug:debugging`
+- On the sidebar, there are two options
+    - Setup
+    - This Firefox (or This Zen on Zen Browser)
+
+Click on it then click on `Load Temporary Addon`. Upload any file in the folder of DiaFox and voila, your extension will work.
+
+You can then toggle it with `Cmd/Ctrl` + `Shift` + `E` and customize it by clicking on the icon in the extensions manager. 
+
+By default it will use `GPT 4.1` through Pollinations as it is the best option provided for free and has a large context window. Rates are also very permissive, you can send up to 1 concurrent message with a 3 second interval. 
+
+I hope you enjoy it! I am not publishing it as a Firefox addon for now as it may still have little bugs but it should be there as soon as I'd have enough feedback.
+
+## 2. Troubleshooting
+
+> This section is to be filled as I receive questions
+
+## 3. Notice
+
+Please keep in mind that this was developed in a very short time (4 days) so you may notice some bugs. If you do please submit them as Issues.
+
+Also, you are free to open PRs if you want to add something!

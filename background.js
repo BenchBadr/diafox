@@ -20,6 +20,7 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
                     });
                 },
             });
+            console.log(result)
             return { text: result };
         
 
