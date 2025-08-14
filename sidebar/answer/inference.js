@@ -3,38 +3,27 @@ const systemPrompts = {
 You are DiaFox, a virtual sidebar assistant for Firefox. 
 - Users can define slash commands called skills with custom instructions
 - Users can provide custom instructions on how you answer.
-
-User can mention tab, if they do so the tab data will be provided to in the beginning of the message.
-You can then ask experts that will answer your question regarding this tab if you need an information.
-If you need to retrieve context, this will be the preliminary task called "thinking". 
-
-You will need to enclose this task with <thinking></thinking> tags. Follow the steps below to write thinking task.
-
-If no context is needed to answer the question, do not start thinking process.
-
-1. Establish a clear roadmap of what you need to achieve. 
-    - eg. I need to find this information which can be found in this tab.... 
-2. As soon as the roadmap is done, 
-    - ask the experts to provide you with the knowledge. 
-    - Tabs data are provided in the beginnning of the message within tag "provided tabs", 
-    - Use the tool call getCtx to interact with experts.
-    - getCtx takes two parameters, tab id and query. 
-        - Tab ids are provided with each message along with tab titles, so you can identify the needs.
-        - Query should be brief and is meant to be a one shot question to the expert.
-        - If provided tabs are relevant to the question, use their context even if the answer is obvious to you.
-    - THIS IS TO BE USED ONLY WITH PROVIDED TABS, DO NOT USE IT OTHERWISE
-
-3. You will receive the expert answer, then you can:
-    - Move to step 4 if you have all the context you need.
-    - If context in current tab was not sufficient, you are allowed to retry once by reforming your query. 
-        - No more than once
-    - Ask for context in another tab
-
-4. Start thinking about formulation of the answer then close </thinking> as you are getting ready to send final answer.
-    - In your answer, strictly quote the provided data by the experts rather than reformulating it.
+- User can mention tab, if they do so the tab data will be provided to in the beginning of their message.
+- You can then ask experts that will answer your question regarding this tab if you need an information.
+- Tabs are to be considered added if and only iff they are before line ===. Ignore what user mentions see only what's before ===. 
+    - If user asks something about a tab that is not added by mentionnin an unreferenced id, 
+    - Point out that you can't access the tab
+    - Do not attempt to fetch it
 
 
-The tabs provided are always in user's message before the line "===". If there is nothing that means you're not provided with any tab.
+- Case 1 : No context needed : the question is straightforward, immediately and start answering.
+- Case 2 : Tabs are included.
+    - 2.1 : The user's question does not require to find any context -> start answering
+    - 2.2 : User asks something that may be found or related to certain tabs
+        - Call the designated tabs using tool call getCtx({id: tabId, query: query})
+            - Query should be brief and concise as you are talking to experts
+            - Is user asked a vague question, query should be only "Read"
+            - tabId is found among provided tabs
+        - Use this only with provided tabs, never try if no tabs provided 
+        - You can perform multiple tool calls if context is not enough, do not do it more than twice for the same tab
+        - Explain your thinking process as you go:
+            - User wants to know... this information may be in tab ...
+        - Conclude your thinking scheme and end thinking state
     `, 
     tabs:`
 You are an expert in reading tabs. When receiving a brief query you need to find the relevant answer in one-shot.
@@ -98,28 +87,78 @@ class Chat {
     }
 
     async getCtx(id, query) {
-        return this.experts[id].chat(query);
+        console.log('GETTING CTX',id, query, this.experts)
+        const expert = this.experts[id]
+        if (expert) {
+            const result = await expert.chatLight(query);
+            console.log('RESULT HERE', result, this.messages)
+            return result
+        }
+        return null
+    }
+
+    async sendToolResponse(result) {
+
+        this.messages.push({
+            role: "tool",
+            tool_call_id: id,
+            name: "getCtx",
+            content: typeof result === "string" ? result : JSON.stringify(result)
+        });
+
+        const response = await fetch(`https://text.pollinations.ai/openai`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'openai',
+                messages: this.messages,
+                tools: this.tools,
+                private: true,
+                seed: 42
+            }),
+        });
     }
 
     async handleToolCall(toolCall) {
-        const { function: { name, arguments: args }, id } = toolCall;
+        console.log('RECEIVE', toolCall)
 
-        if (name === "getCtx") {
-            const { tabId, query } = JSON.parse(args);
+        if (toolCall.name === "getCtx") {
+            const { tabId, query } = JSON.parse(toolCall.arguments);
 
             // Call your expert system
             const result = await this.getCtx(tabId, query);
 
+            console.log(result)
+
             // Send the result back as a "tool" message
-            await sendToolResponse(id, result);
+            await sendToolResponse(result);
         }
     }
+
+    async chatLight(query) {
+
+        // Artificial delay of 4 seconds
+        // await new Promise(resolve => setTimeout(resolve, 4000));
+        const response = await fetch(`https://text.pollinations.ai/openai`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'openai',
+                messages: [this.messages[0], {role:'user', content:query}], // No need to save chat messages
+                private: true,
+                seed: 42
+            }),
+        });
+        const data = await response.json();
+        return data.choices[0].message.content.split('**Sponsor**')[0];
+    }
+
 
     async chat(query, onToken) {
 
         console.log('LOGS', query, this.instructions)
 
-        this.messages = [...this.messages, {role:'user', content:query}]
+        this.messages.push({role:'user', content:query})
         const response = await fetch(`https://text.pollinations.ai/openai`, {
             method: 'POST',
             headers: {
@@ -142,6 +181,8 @@ class Chat {
         const decoder = new TextDecoder();
         let result = '';
 
+        const toolCallAcc = {arguments:'', name:''};
+
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
@@ -157,6 +198,7 @@ class Chat {
 
                         const content = data.choices?.[0]?.delta?.content;
                         const toolCalls = data.choices?.[0]?.delta?.tool_calls;
+                        const finishReason = data.choices?.[0]?.finish_reason;
 
 
                         if (content) {
@@ -164,11 +206,23 @@ class Chat {
                             if (onToken) onToken(content);
                         }
 
+                        // 2.1 Handle tool_call stream instructions and accumulate
                         if (toolCalls) {
                             for (const toolCall of toolCalls) {
-                                console.log('TOOLCALL FOUND', toolCall.function)
-                                await this.handleToolCall(toolCall);
+
+                                if (toolCall.function.name) {
+                                    toolCallAcc.name = toolCallAcc.name + toolCall.function.name;
+                                }
+
+                                if (toolCall.function.arguments) {
+                                    toolCallAcc.arguments = toolCallAcc.arguments + toolCall.function.arguments;
+                                }
                             }
+                        }
+
+                        // 2.2 Finish tool_call stream and use tool_call with acc
+                        if (finishReason === 'tool_calls') {
+                            await this.handleToolCall(toolCallAcc);
                         }
 
                     } catch (e) {
