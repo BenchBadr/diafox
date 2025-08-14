@@ -1,5 +1,6 @@
 import { markdown } from "./markdown.js";
 
+const agents = {}
 
 const sendAnswer = async (ctxIds) => {
     const msgs = document.querySelector('.msgs');
@@ -7,9 +8,10 @@ const sendAnswer = async (ctxIds) => {
     newDiv.className = 'markdown-body';
     msgs.appendChild(newDiv);
 
-    ctxIds.forEach(ctxId => {
-        retrieveTab(ctxId, newDiv);
-    });
+    for (const ctxId of ctxIds) {
+        const tabData = await retrieveTab(ctxId, newDiv);
+        console.log(tabData);
+    }
 
 
 //     newDiv.innerHTML = markdown(`
@@ -59,20 +61,22 @@ const retrieveTab = async (tabIdAlt, newDiv) => {
 
     const response = await browser.runtime.sendMessage({
         type: "getTabContent",
-        tabId: tabId,
-        tabUrl: tab.url
+        tab:tab
     });
   if (response && response.text) {
     const text = response.text;
-    console.log(text, text.length)
 
     // Succeed!
     divTask.classList.add('done')
+
+    return {title: tab.title, url:tab.url, text:text};
   } else {
     // Failed!
     divTask.classList.add('done')
     divTask.classList.add('fail')
   }
+
+  return null;
 }
 
 

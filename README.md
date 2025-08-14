@@ -17,7 +17,8 @@ AI features be in all browsers and DiaFox is meant to bring these beloved featur
 Below a check-list of the development progress.
 
 
-# I. Check-list
+
+a# I. Check-list
 
 
 

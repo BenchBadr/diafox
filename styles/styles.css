@@ -840,7 +840,7 @@ mjx-container {
 }
 
 
-.task-container:not(.done) .loading-text, .thinking label {
+.task-container:not(.done) .loading-text, :not(.done).thinking label {
   display: inline;
   background: linear-gradient(90deg, var(--text-op) 0%, var(--text-op-high) 50%, var(--text-op) 100%);
   background-size: 200% 100%;
@@ -906,7 +906,7 @@ mjx-container {
   position: relative;
   z-index: 1;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
@@ -945,7 +945,7 @@ mjx-container {
 
 
 .done .assist{
-  animation: none !important;
+  animation: none;
   display:flex;
 
   &::after {
@@ -989,33 +989,148 @@ mjx-container {
 }
 
 .thinking .think-content {
-  display: none;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease;
-  color:var(--text-op);
-  border-left:2px solid var(--text-op);
-  padding: 5px;
-  margin:5px;
+  margin: 15px 0 0 0;
+  list-style: none;
+  position: relative;
+  display: block;
+  font-size:85%;
+
+  color:var(--text-op-high);
+
+  padding:0;
+
+  filter:blur(5px);
+
+  transition: .15s;
+
+  padding-left:50px;
+
+
+
+  li {
+    position: relative;
+    padding-bottom: 2em;
+  }
+
+  li::before{
+    content: '';
+    position: absolute;
+    left: -1em;
+    top: .25em;
+    width: .5em;
+    height: .5em;
+    background:var(--current-op-50);
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  li.done::before{
+    content:'check_circle_outlined';
+    font-family: Material Icons;
+    color:var(--current-op-50);
+    background:none;
+    left:-1.25em;
+    top:0em;
+  }
+
+  li:last-child:not(.done)::before {
+    background:var(--green);
+    animation:pulse 1.5s infinite;
+  }
+
+  li:last-child:not(.done){
+    animation:1s opacipulse 1s infinite;
+  }
+
+  li:not(:last-child):after {
+    content: '';
+    position: absolute;
+    left: calc(-.75em - 1px);
+    top: 1em;
+    width: 1px;
+    height: calc(100% - 1em);
+    background: var(--text-op);
+  }
+
 }
 
 .thinking label:has(input[type="checkbox"]:checked) + .think-content {
-  max-height: 500px;
-  display: block;
+  max-height:500px;
+  padding: 0;
+  padding-left:50px;
+  filter:none;
+
 }
 
-.thinking label::before{
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--green);
+    opacity: 1;
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+    opacity: 0.7;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    opacity: 1;
+  }
+}
+
+@keyframes opacipulse{
+  0% {
+    opacity:1;
+  }
+  50%{
+    opacity:.75;
+  }
+  100%{
+    opacity:1;
+  }
+}
+
+
+/* .thinking label::before{
   font-family: Material Icons;
   content:'chevron_right';
   color:var(--text-op);
 }
 
-.thinking label:has(input[type="checkbox"]:checked) {
-  color:red !important;
-}
+.thinking label:has(input[type="checkbox"]:checked)::before {
+  transform:rotate(90deg);
+} */
 
 .thinking label{
-  display: flex;
+  display: inline-flex !important;
   align-items: center;
   cursor:pointer;
+  transition:.2s;
+  padding:5px;
+  gap:.5em;
+  user-select: none;
+
+  &::before{
+    transition:.1s;
+  }
+}
+
+
+.done.thinking label{
+
+  display: inline-flex;
+  color:var(--text-op-high);
+  user-select: none;
+
+  white-space: nowrap; 
+  align-items: center;
+
+  &::after{
+    font-family: Material Icons;
+    content:'check';
+    color:var(--green);
+    margin-right:.5em;
+  }
+
 }
