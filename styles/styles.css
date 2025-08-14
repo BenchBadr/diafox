@@ -1035,6 +1035,10 @@ mjx-container {
     top:-.125em;
   }
 
+  li.asking {
+    font-style: italic;
+  }
+
   li:last-child:not(.done)::before {
     background:var(--green);
     animation:pulse 1.5s infinite;
@@ -1133,4 +1137,8 @@ mjx-container {
     margin-right:.5em;
   }
 
+}
+
+.thinking{
+  display: none;
 }

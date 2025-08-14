@@ -3,6 +3,7 @@ import Chat from "./inference.js";
 
 const experts = {}
 const tabsData = new Set();
+const tabTitler = {};
 
 // Creating main inference
 const mainInf = new Chat(
@@ -17,11 +18,61 @@ const sendAnswer = async (ctxIds, prompt) => {
     const newDiv = document.createElement('div');
     newDiv.className = 'markdown-body';
     msgs.appendChild(newDiv);
+
     const taskDiv = document.createElement('div');
     newDiv.appendChild(taskDiv);
 
+    // create thinking container
+    const thinkDiv = document.createElement('div');
+    thinkDiv.className = 'thinking';
+
+    const label = document.createElement('label');
+
+    const assistDiv = document.createElement('div');
+    assistDiv.className = 'assist';
+    label.appendChild(assistDiv);
+
+    label.appendChild(document.createTextNode('Thinking...'));
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    label.appendChild(checkbox);
+
+    thinkDiv.appendChild(label);
+
+    const thinkContent = document.createElement('div');
+    thinkContent.className = 'think-content';
+    thinkDiv.appendChild(thinkContent);
+
+
+    newDiv.appendChild(thinkDiv);
+
     const ansDiv = document.createElement('div');
     newDiv.appendChild(ansDiv);
+
+    const beforeTms = new Date().toISOString();
+
+
+    function addThought(content, className = '') {
+        if (className === 'done') {
+            thinkDiv.classList.add('done');
+            const diffSecs = ((new Date() - new Date(beforeTms)) / 1000).toFixed(1);
+            label.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    node.textContent = `Thought for ${diffSecs}s`;
+                }
+            });
+        }
+
+
+        thinkDiv.style.display = 'block';
+        const li = document.createElement('li');
+        if (className) {
+            li.className = className;
+        }
+        li.textContent = content;
+        thinkContent.appendChild(li);
+    }
     
 
     // Creating agents
@@ -30,6 +81,7 @@ const sendAnswer = async (ctxIds, prompt) => {
         if (!tabData) {
             continue;
         }
+        tabTitler[tabData.id] = tabData.title;
         tabsData.add(`- ID(${tabData.id}) - [${tabData.title}](tabData.url)`);
         experts[tabData.id] = new Chat(
             tabData.url.includes('youtube.com') ? 'youtube ': 'tabs',
@@ -39,6 +91,10 @@ const sendAnswer = async (ctxIds, prompt) => {
 
     // Update experts for main inference
     mainInf.updateExperts(experts);
+    mainInf.addThought = addThought;
+    mainInf.tabTitler = tabTitler;
+
+
 
 
 

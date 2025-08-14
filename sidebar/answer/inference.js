@@ -28,6 +28,7 @@ You are DiaFox, a virtual sidebar assistant for Firefox.
     tabs:`
 You are an expert in reading tabs. When receiving a brief query you need to find the relevant answer in one-shot.
 No follow up question or comments, just quote answering the needs.
+Always answer in bullet points.
 If you're asked to read tab content, return a summary of a couple takeaways
 The text of the tab is just below this line:
 ===
@@ -35,7 +36,7 @@ The text of the tab is just below this line:
     youtube:`
 You are a YouTube reader expert. You will be provided with transcripts of a YouTube video.
 You will receive brief queries and need to find pertinent and relevant informations from the transcripts to answer.
-If you're asked to read tab content, return a summary of a couple takeaways
+If you're asked to read transcript, return a summary of a couple takeaways
 Return exactly a quote of the transcript with current timestamp.
 Transcript below this line
 ===
@@ -46,6 +47,7 @@ Transcript below this line
 class Chat {
     constructor(instructions = 'tabs', additionalCtx = '', experts = {}) {
         this.instructions = instructions;
+        this.addThought = null;
 
         // Tool definition - only for main inference otherwise no tools
         if (experts) {
@@ -108,20 +110,34 @@ class Chat {
 
         console.log(this.messages)
 
-        return await this.chat('', onToken, /* addUserMessage = */ false);
+        return await this.chat('', onToken, false);
 
     }
 
     async handleToolCall(toolCall, onToken) {
 
         if (toolCall.name === "getCtx") {
+
             const { tabId, query } = JSON.parse(toolCall.arguments);
+
+            if (this.addThought && this.tabTitler) {
+                this.addThought(`Asking expert about ${this.tabTitler[tabId]} : ${query}`, 'asking');
+            }
 
             // Call your expert system
             const result = await this.getCtx(tabId, query);
 
+            if (this.addThought) {
+                result.split('\n').forEach((item) => this.addThought(item.slice(2)));
+            }
+
             // Send the result back as a "tool" message
             await this.sendToolResponse(result, toolCall.id, onToken);
+
+            // Mark thoughts as finished
+            if (this.addThought) {
+                this.addThought('Finished','done')
+            }
         }
     }
 
