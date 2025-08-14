@@ -18,7 +18,7 @@ Below a check-list of the development progress.
 
 
 
-a# I. Check-list
+# I. Check-list
 
 
 
