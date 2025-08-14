@@ -87,18 +87,18 @@ class Chat {
     }
 
     async getCtx(id, query) {
-        console.log('GETTING CTX',id, query, this.experts)
+
         const expert = this.experts[id]
         if (expert) {
             const result = await expert.chatLight(query);
-            console.log('RESULT HERE', result, this.messages)
+
             return result
         }
         return null
     }
 
-    async sendToolResponse(result) {
-
+    async sendToolResponse(result, id, onToken) {
+        console.log(result, id)
         this.messages.push({
             role: "tool",
             tool_call_id: id,
@@ -106,21 +106,13 @@ class Chat {
             content: typeof result === "string" ? result : JSON.stringify(result)
         });
 
-        const response = await fetch(`https://text.pollinations.ai/openai`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'openai',
-                messages: this.messages,
-                tools: this.tools,
-                private: true,
-                seed: 42
-            }),
-        });
+        console.log(this.messages)
+
+        return await this.chat('', onToken, /* addUserMessage = */ false);
+
     }
 
-    async handleToolCall(toolCall) {
-        console.log('RECEIVE', toolCall)
+    async handleToolCall(toolCall, onToken) {
 
         if (toolCall.name === "getCtx") {
             const { tabId, query } = JSON.parse(toolCall.arguments);
@@ -128,10 +120,8 @@ class Chat {
             // Call your expert system
             const result = await this.getCtx(tabId, query);
 
-            console.log(result)
-
             // Send the result back as a "tool" message
-            await sendToolResponse(result);
+            await this.sendToolResponse(result, toolCall.id, onToken);
         }
     }
 
@@ -154,11 +144,11 @@ class Chat {
     }
 
 
-    async chat(query, onToken) {
+    async chat(query, onToken, addUserMessage = true) {
 
-        console.log('LOGS', query, this.instructions)
-
-        this.messages.push({role:'user', content:query})
+        if (addUserMessage && query) {
+            this.messages.push({role:'user', content:query})
+        }
         const response = await fetch(`https://text.pollinations.ai/openai`, {
             method: 'POST',
             headers: {
@@ -181,7 +171,7 @@ class Chat {
         const decoder = new TextDecoder();
         let result = '';
 
-        const toolCallAcc = {arguments:'', name:''};
+        const toolCallAcc = {arguments:'', name:'', id:null};
 
         while (true) {
             const { done, value } = await reader.read();
@@ -217,12 +207,30 @@ class Chat {
                                 if (toolCall.function.arguments) {
                                     toolCallAcc.arguments = toolCallAcc.arguments + toolCall.function.arguments;
                                 }
+
+                                if (toolCall.id) {
+                                    toolCallAcc.id = toolCall.id;
+                                }
                             }
                         }
 
                         // 2.2 Finish tool_call stream and use tool_call with acc
                         if (finishReason === 'tool_calls') {
-                            await this.handleToolCall(toolCallAcc);
+
+                            this.messages.push({
+                                role: "assistant",
+                                content: null,
+                                tool_calls: [{
+                                    id: toolCallAcc.id,
+                                    type: "function",
+                                    function: {
+                                        name: toolCallAcc.name,
+                                        arguments: toolCallAcc.arguments
+                                    }
+                                }]
+                            });
+                            
+                            await this.handleToolCall(toolCallAcc, onToken);
                         }
 
                     } catch (e) {
