@@ -1032,7 +1032,7 @@ mjx-container {
     color:var(--current-op-50);
     background:none;
     left:-1.25em;
-    top:0em;
+    top:-.125em;
   }
 
   li:last-child:not(.done)::before {

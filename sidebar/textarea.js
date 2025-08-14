@@ -117,7 +117,7 @@ function sendMsg(content) {
     const ctxCardIds = Array.from(ctxClone.querySelectorAll('.ctx-card'))
         .map(card => card.getAttribute('data-id'));
 
-    sendAnswer(ctxCardIds)
+    sendAnswer(ctxCardIds, textarea.innerText);
     
     //.finally(() => {
     //    sendBtn.classList.remove('running');

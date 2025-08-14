@@ -1,22 +1,53 @@
 import { markdown } from "./markdown.js";
+import Chat from "./inference.js";
 
-const agents = {}
+const experts = {}
+const tabsData = new Set();
 
-const sendAnswer = async (ctxIds) => {
+// Creating main inference
+const mainInf = new Chat(
+    'main',
+    '', // No additional ctx for sys prompt as tab data provided with each msg
+    {}
+
+);
+
+const sendAnswer = async (ctxIds, prompt) => {
     const msgs = document.querySelector('.msgs');
     const newDiv = document.createElement('div');
     newDiv.className = 'markdown-body';
     msgs.appendChild(newDiv);
+    const taskDiv = document.createElement('div');
+    newDiv.appendChild(taskDiv);
 
+    const ansDiv = document.createElement('div');
+    newDiv.appendChild(ansDiv);
+    
+
+    // Creating agents
     for (const ctxId of ctxIds) {
-        const tabData = await retrieveTab(ctxId, newDiv);
-        console.log(tabData);
+        const tabData = await retrieveTab(ctxId, taskDiv);
+        if (!tabData) {
+            continue;
+        }
+        tabsData.add(`- ID(${tabData.id}) - [${tabData.title}](tabData.url)`);
+        experts[tabData.id] = new Chat(
+            tabData.url.includes('youtube.com') ? 'youtube ': 'tabs',
+            tabData.text // additional ctx added to system prompt - here: tab text / transcript
+        )
     }
 
+    // Update experts for main inference
+    mainInf.updateExperts(experts);
 
-//     newDiv.innerHTML = markdown(`
-// # Well... $5x$
-//         `);
+
+
+
+    let streamedAnswer = '';
+    await mainInf.chat(Array.from(tabsData).join('\n') + '\n === \n' + prompt, (chunk) => {
+        streamedAnswer += chunk;
+        ansDiv.innerHTML = markdown(streamedAnswer);
+    });
 
     await postProc(newDiv, msgs);
 }
@@ -69,7 +100,7 @@ const retrieveTab = async (tabIdAlt, newDiv) => {
     // Succeed!
     divTask.classList.add('done')
 
-    return {title: tab.title, url:tab.url, text:text};
+    return {title: tab.title, url:tab.url, text:text, id:tabIdAlt};
   } else {
     // Failed!
     divTask.classList.add('done')
